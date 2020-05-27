@@ -5,10 +5,10 @@ import com.improve_future.harmonica.core.Dbms
 
 class Default: DbConfig({
     dbms = Dbms.MySQL
-    dbName = "Schedule"
-    host = "192.168.99.106"
+    dbName = "<Database name>"
+    host = "<Your host>"
     port = 32769
     sslmode = false
-    user = "root"
-    password = "password"
+    user = "<Database user>"
+    password = "Database user password"
 })
