@@ -35,6 +35,7 @@ object DatabaseFactory {
     }
 
     suspend fun <T> dbQuery(
-        block: suspend () -> T): T =
+        block: suspend () -> T
+    ): T =
         newSuspendedTransaction(Dispatchers.IO, db) { block() }
 }

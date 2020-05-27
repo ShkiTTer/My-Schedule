@@ -17,7 +17,7 @@ group 'com.prinzh'
 version '1.0-SNAPSHOT'
 
 mainClassName = "com.prinzh.schedule.app.common.ApplicationKt"
-extensions.extraProperties["migrationPackage"] = "com.prinzh.schedule.app.data.db"
+extensions.extraProperties["migrationPackage"] = "com.prinzh.schedule.data.db"
 
 repositories {
     mavenLocal()
