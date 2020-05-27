@@ -22,7 +22,7 @@ object DatabaseFactory {
     private fun hikari(): HikariDataSource {
         val config = HikariConfig().apply {
             driverClassName = "com.mysql.jdbc.Driver"
-            jdbcUrl = "jdbc:mysql://192.168.99.106:32769/Schedule?useSSL=false"
+            jdbcUrl = "jdbc:mysql://192.168.99.106:32769/Schedule?allowPublicKeyRetrieval=true&useSSL=false"
             username = "root"
             password = "password"
             isAutoCommit = true

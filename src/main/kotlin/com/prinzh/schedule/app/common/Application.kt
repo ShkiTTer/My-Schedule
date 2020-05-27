@@ -1,18 +1,15 @@
 package com.prinzh.schedule.app.common
 
 import com.prinzh.schedule.app.di.serviceModule
+import com.prinzh.schedule.app.route.api
 import com.prinzh.schedule.data.db.common.DatabaseFactory
-import com.prinzh.schedule.domain.common.response.ErrorResponse
-import com.prinzh.schedule.domain.common.response.Response
+import com.prinzh.schedule.domain.common.response.EmptyResponse
 import com.prinzh.schedule.domain.common.response.ResponseInfo
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.auth.ForbiddenResponse
-import io.ktor.client.statement.HttpResponse
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
-import io.ktor.http.content.OutgoingContent
 import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -27,7 +24,7 @@ import java.text.DateFormat
 
 @KtorExperimentalAPI
 fun main(args: Array<String>) {
-    val port = System.getenv("PORT")?.toInt() ?: 23888
+    val port = System.getenv("PORT")?.toInt() ?: 55555
 
     embeddedServer(Netty, port) {
         DatabaseFactory.init()
@@ -46,15 +43,16 @@ fun main(args: Array<String>) {
         install(ContentNegotiation) {
             gson {
                 setDateFormat(DateFormat.MEDIUM, DateFormat.MEDIUM)
+                setPrettyPrinting()
             }
         }
 
         install(StatusPages) {
             exception<BadRequestException> {
-                call.respond(ErrorResponse(ResponseInfo.BAD_REQUEST))
+                call.respond(EmptyResponse(ResponseInfo.BAD_REQUEST))
             }
             exception<NotFoundException> {
-                call.respond(ErrorResponse(ResponseInfo.NOT_FOUND))
+                call.respond(EmptyResponse(ResponseInfo.NOT_FOUND))
             }
         }
 
@@ -62,6 +60,8 @@ fun main(args: Array<String>) {
             get("/") {
                 call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
             }
+
+            api()
         }
     }.start(wait = true)
 }
