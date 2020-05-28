@@ -1,5 +1,5 @@
 package com.prinzh.schedule.data.converter
 
-interface EntityConverter<T> {
+interface IEntityConverter<T> {
     fun toDomain(): T
 }

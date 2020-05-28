@@ -8,5 +8,6 @@ import io.ktor.util.KtorExperimentalAPI
 fun Route.api() {
     route("api") {
         faculty()
+        building()
     }
 }
