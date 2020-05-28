@@ -9,5 +9,6 @@ fun Route.api() {
     route("api") {
         faculty()
         building()
+        subject()
     }
 }
