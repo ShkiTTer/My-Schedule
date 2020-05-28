@@ -10,5 +10,6 @@ fun Route.api() {
         faculty()
         building()
         subject()
+        teacher()
     }
 }

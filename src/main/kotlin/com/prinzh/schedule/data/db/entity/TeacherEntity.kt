@@ -1,5 +1,7 @@
 package com.prinzh.schedule.data.db.entity
 
+import com.prinzh.schedule.data.converter.IEntityConverter
+import com.prinzh.schedule.domain.entity.Teacher
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -12,10 +14,12 @@ object Teachers: UUIDTable("teacher") {
     val patronymic = varchar("patronymic", 50)
 }
 
-class TeacherEntity(id: EntityID<UUID>): UUIDEntity(id) {
+class TeacherEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<Teacher> {
     companion object: UUIDEntityClass<TeacherEntity>(Teachers)
 
     var surname by Teachers.surname
     var name by Teachers.name
     var patronymic by Teachers.patronymic
+
+    override fun toDomain(): Teacher = Teacher(id.value, surname, name, patronymic)
 }
