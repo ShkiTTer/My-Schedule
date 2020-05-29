@@ -1,15 +1,15 @@
-package com.prinzh.schedule.data.services
+package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.SubjectEntity
 import com.prinzh.schedule.domain.entity.Subject
-import com.prinzh.schedule.domain.services.ISubjectService
+import com.prinzh.schedule.domain.repository.ISubjectRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class SubjectServiceImpl: ISubjectService {
+class SubjectRepositoryImpl: ISubjectRepository {
     override suspend fun getAll(): List<Subject> = dbQuery {
         SubjectEntity.all().map { it.toDomain() }
     }

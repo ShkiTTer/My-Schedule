@@ -1,10 +1,11 @@
 package com.prinzh.schedule.app.route
 
-import com.prinzh.schedule.domain.common.response.DataResponse
-import com.prinzh.schedule.domain.common.response.EmptyResponse
-import com.prinzh.schedule.domain.common.response.ResponseInfo
+import com.prinzh.schedule.app.requests.FacultyRequest
+import com.prinzh.schedule.app.responses.common.DataResponse
+import com.prinzh.schedule.app.responses.common.EmptyResponse
+import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.domain.entity.Faculty
-import com.prinzh.schedule.domain.services.IFacultyService
+import com.prinzh.schedule.app.services.interfaces.IFacultyService
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -21,7 +22,12 @@ fun Route.faculty() {
 
     route("faculty") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.getAll()
+                )
+            )
         }
 
         get("{id}") {
@@ -31,17 +37,23 @@ fun Route.faculty() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            val faculty = service.getById(id) ?: throw NotFoundException()
-
-            call.respond(DataResponse(ResponseInfo.OK, faculty))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.getById(id)
+                )
+            )
         }
 
         post {
-            val data = call.receive<Faculty>()
+            val data = call.receive<FacultyRequest>()
 
-            if (data.title.isEmpty()) throw BadRequestException("Invalid credentials")
-
-            call.respond(DataResponse(ResponseInfo.OK, service.create(data)))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.create(data)
+                )
+            )
         }
 
         put {
@@ -51,12 +63,14 @@ fun Route.faculty() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            var data = call.receive<Faculty>()
+            val data = call.receive<FacultyRequest>()
 
-            if (data.title.isEmpty()) throw BadRequestException("Invalid credentials")
-
-            data = service.update(id, data)
-            call.respond(DataResponse(ResponseInfo.OK, data))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.update(id, data)
+                )
+            )
         }
 
         delete {

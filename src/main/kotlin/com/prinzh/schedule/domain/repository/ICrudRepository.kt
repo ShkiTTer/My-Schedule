@@ -1,6 +1,6 @@
-package com.prinzh.schedule.domain.services
+package com.prinzh.schedule.domain.repository
 
-interface ICrudService<T, ID> {
+interface ICrudRepository<T, ID> {
     suspend fun getAll(): List<T>
     suspend fun getById(id: ID): T?
     suspend fun create(entity: T): T

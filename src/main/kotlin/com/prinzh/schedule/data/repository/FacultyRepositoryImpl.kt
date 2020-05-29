@@ -1,15 +1,15 @@
-package com.prinzh.schedule.data.services
+package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.FacultyEntity
 import com.prinzh.schedule.domain.entity.Faculty
-import com.prinzh.schedule.domain.services.IFacultyService
+import com.prinzh.schedule.domain.repository.IFacultyRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class FacultyServiceImpl : IFacultyService {
+class FacultyRepositoryImpl : IFacultyRepository {
     override suspend fun getAll(): List<Faculty> = dbQuery {
         FacultyEntity.all().map { it.toDomain() }
     }
