@@ -1,15 +1,15 @@
-package com.prinzh.schedule.data.services
+package com.prinzh.schedule.data.repository
 
-import com.prinzh.schedule.domain.entity.Building
-import com.prinzh.schedule.domain.services.IBuildingService
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.BuildingEntity
+import com.prinzh.schedule.domain.entity.Building
+import com.prinzh.schedule.domain.repository.IBuildingRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class BuildingServiceImpl: IBuildingService {
+class BuildingRepositoryImpl : IBuildingRepository {
     override suspend fun getAll(): List<Building> = dbQuery {
         BuildingEntity.all().map { it.toDomain() }
     }

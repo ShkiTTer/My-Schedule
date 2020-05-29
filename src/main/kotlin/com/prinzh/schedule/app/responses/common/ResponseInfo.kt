@@ -1,4 +1,4 @@
-package com.prinzh.schedule.domain.common.response
+package com.prinzh.schedule.app.responses.common
 
 import io.ktor.http.HttpStatusCode
 import java.util.*

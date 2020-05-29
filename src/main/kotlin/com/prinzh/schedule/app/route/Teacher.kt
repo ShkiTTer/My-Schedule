@@ -1,11 +1,11 @@
 package com.prinzh.schedule.app.route
 
-import com.prinzh.schedule.domain.common.response.DataResponse
-import com.prinzh.schedule.domain.common.response.EmptyResponse
-import com.prinzh.schedule.domain.common.response.ResponseInfo
-import com.prinzh.schedule.domain.entity.Subject
+import com.prinzh.schedule.app.requests.TeacherRequest
+import com.prinzh.schedule.app.responses.common.DataResponse
+import com.prinzh.schedule.app.responses.common.EmptyResponse
+import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.domain.entity.Teacher
-import com.prinzh.schedule.domain.services.ITeacherService
+import com.prinzh.schedule.app.services.interfaces.ITeacherService
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -20,9 +20,14 @@ import java.util.*
 fun Route.teacher() {
     val service: ITeacherService by inject()
 
-    route("subject") {
+    route("teacher") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.getAll()
+                )
+            )
         }
 
         get("{id}") {
@@ -32,18 +37,23 @@ fun Route.teacher() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            val teacher = service.getById(id) ?: throw NotFoundException()
-
-            call.respond(DataResponse(ResponseInfo.OK, teacher))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.getById(id)
+                )
+            )
         }
 
         post {
-            val data = call.receive<Teacher>()
+            val data = call.receive<TeacherRequest>()
 
-            if (data.surname.isNullOrEmpty() || data.name.isNullOrEmpty() || data.patronymic.isNullOrEmpty())
-                throw BadRequestException("Invalid credentials")
-
-            call.respond(DataResponse(ResponseInfo.OK, service.create(data)))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.create(data)
+                )
+            )
         }
 
         put {
@@ -53,12 +63,14 @@ fun Route.teacher() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            val data = call.receive<Teacher>()
+            val data = call.receive<TeacherRequest>()
 
-            if (data.surname.isNullOrEmpty() || data.name.isNullOrEmpty() || data.patronymic.isNullOrEmpty())
-                throw BadRequestException("Invalid credentials")
-
-            call.respond(DataResponse(ResponseInfo.OK, service.update(id, data)))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.update(id, data)
+                )
+            )
         }
 
         delete {

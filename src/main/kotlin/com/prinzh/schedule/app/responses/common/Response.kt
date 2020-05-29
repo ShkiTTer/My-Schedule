@@ -1,4 +1,4 @@
-package com.prinzh.schedule.domain.common.response
+package com.prinzh.schedule.app.responses.common
 
 abstract class Response(val info: ResponseInfo)
 

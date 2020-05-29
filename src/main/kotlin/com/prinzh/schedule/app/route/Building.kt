@@ -1,14 +1,13 @@
 package com.prinzh.schedule.app.route
 
-import com.prinzh.schedule.domain.common.response.DataResponse
-import com.prinzh.schedule.domain.common.response.EmptyResponse
-import com.prinzh.schedule.domain.common.response.ResponseInfo
+import com.prinzh.schedule.app.requests.BuildingRequest
+import com.prinzh.schedule.app.responses.common.DataResponse
+import com.prinzh.schedule.app.responses.common.EmptyResponse
+import com.prinzh.schedule.app.responses.common.ResponseInfo
+import com.prinzh.schedule.app.services.interfaces.IBuildingService
 import com.prinzh.schedule.domain.entity.Building
-import com.prinzh.schedule.domain.entity.Faculty
-import com.prinzh.schedule.domain.services.IBuildingService
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
-import io.ktor.features.NotFoundException
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
@@ -22,7 +21,12 @@ fun Route.building() {
 
     route("building") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.getAll()
+                )
+            )
         }
 
         get("{id}") {
@@ -32,17 +36,23 @@ fun Route.building() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            val building = service.getById(id) ?: throw NotFoundException()
-
-            call.respond(DataResponse(ResponseInfo.OK, building))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.getById(id)
+                )
+            )
         }
 
         post {
-            val data = call.receive<Building>()
+            val data = call.receive<BuildingRequest>()
 
-            if (data.address.isNullOrEmpty() || data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
-
-            call.respond(DataResponse(ResponseInfo.OK, service.create(data)))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.create(data)
+                )
+            )
         }
 
         put {
@@ -52,11 +62,14 @@ fun Route.building() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            val data = call.receive<Building>()
+            val data = call.receive<BuildingRequest>()
 
-            if (data.title.isNullOrEmpty() || data.address.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
-
-            call.respond(DataResponse(ResponseInfo.OK, service.update(id, data)))
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.update(id, data)
+                )
+            )
         }
 
         delete {

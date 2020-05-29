@@ -1,15 +1,15 @@
-package com.prinzh.schedule.data.services
+package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.TeacherEntity
 import com.prinzh.schedule.domain.entity.Teacher
-import com.prinzh.schedule.domain.services.ITeacherService
+import com.prinzh.schedule.domain.repository.ITeacherRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class TeacherServiceImpl: ITeacherService {
+class TeacherRepositoryImpl: ITeacherRepository {
     override suspend fun getAll(): List<Teacher> = dbQuery {
         TeacherEntity.all().map { it.toDomain() }
     }

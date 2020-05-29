@@ -1,10 +1,11 @@
 package com.prinzh.schedule.app.common
 
+import com.prinzh.schedule.app.di.repositoryModule
 import com.prinzh.schedule.app.di.serviceModule
 import com.prinzh.schedule.app.route.api
 import com.prinzh.schedule.data.db.common.DatabaseFactory
-import com.prinzh.schedule.domain.common.response.EmptyResponse
-import com.prinzh.schedule.domain.common.response.ResponseInfo
+import com.prinzh.schedule.app.responses.common.EmptyResponse
+import com.prinzh.schedule.app.responses.common.ResponseInfo
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.*
@@ -29,7 +30,7 @@ fun main(args: Array<String>) {
     embeddedServer(Netty, port) {
         DatabaseFactory.init()
 
-        installKoin(listOf(serviceModule))
+        installKoin(listOf(repositoryModule, serviceModule))
 
         install(CallLogging) {
             level = Level.INFO
