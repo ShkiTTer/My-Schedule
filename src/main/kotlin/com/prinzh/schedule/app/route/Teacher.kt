@@ -4,11 +4,9 @@ import com.prinzh.schedule.app.requests.TeacherRequest
 import com.prinzh.schedule.app.responses.common.DataResponse
 import com.prinzh.schedule.app.responses.common.EmptyResponse
 import com.prinzh.schedule.app.responses.common.ResponseInfo
-import com.prinzh.schedule.domain.entity.Teacher
 import com.prinzh.schedule.app.services.interfaces.ITeacherService
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
-import io.ktor.features.NotFoundException
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*

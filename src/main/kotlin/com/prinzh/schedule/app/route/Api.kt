@@ -11,5 +11,6 @@ fun Route.api() {
         building()
         subject()
         teacher()
+        audience()
     }
 }

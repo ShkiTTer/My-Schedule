@@ -1,10 +1,11 @@
 package com.prinzh.schedule.app.route
 
-import com.prinzh.schedule.app.requests.SubjectRequest
+import com.prinzh.schedule.app.requests.AudienceRequest
+import com.prinzh.schedule.app.requests.BuildingRequest
 import com.prinzh.schedule.app.responses.common.DataResponse
 import com.prinzh.schedule.app.responses.common.EmptyResponse
 import com.prinzh.schedule.app.responses.common.ResponseInfo
-import com.prinzh.schedule.app.services.interfaces.ISubjectService
+import com.prinzh.schedule.app.services.interfaces.IAudienceService
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.request.receive
@@ -15,17 +16,12 @@ import org.koin.ktor.ext.inject
 import java.util.*
 
 @KtorExperimentalAPI
-fun Route.subject() {
-    val service: ISubjectService by inject()
+fun Route.audience() {
+    val service: IAudienceService by inject()
 
-    route("subject") {
+    route("audience") {
         get {
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.getAll()
-                )
-            )
+            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }
 
         get("{id}") {
@@ -44,7 +40,7 @@ fun Route.subject() {
         }
 
         post {
-            val data = call.receive<SubjectRequest>()
+            val data = call.receive<AudienceRequest>()
 
             call.respond(
                 DataResponse(
@@ -61,7 +57,7 @@ fun Route.subject() {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
 
-            val data = call.receive<SubjectRequest>()
+            val data = call.receive<AudienceRequest>()
 
             call.respond(
                 DataResponse(

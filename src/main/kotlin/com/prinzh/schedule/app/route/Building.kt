@@ -5,7 +5,6 @@ import com.prinzh.schedule.app.responses.common.DataResponse
 import com.prinzh.schedule.app.responses.common.EmptyResponse
 import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.app.services.interfaces.IBuildingService
-import com.prinzh.schedule.domain.entity.Building
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.request.receive
