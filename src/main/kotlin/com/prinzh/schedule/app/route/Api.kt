@@ -14,5 +14,6 @@ fun Route.api() {
         audience()
         group()
         lessonType()
+        teacherDiscipline()
     }
 }

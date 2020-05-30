@@ -1,5 +1,7 @@
 package com.prinzh.schedule.data.db.entity
 
+import com.prinzh.schedule.data.converter.IEntityConverter
+import com.prinzh.schedule.domain.entity.TeacherDiscipline
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -13,10 +15,17 @@ object TeacherDisciplines: UUIDTable("teacher_discipline") {
     val type = reference("type", LessonTypes, ReferenceOption.CASCADE)
 }
 
-class TeacherDisciplineEntity(id: EntityID<UUID>): UUIDEntity(id) {
+class TeacherDisciplineEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<TeacherDiscipline> {
     companion object: UUIDEntityClass<TeacherDisciplineEntity>(TeacherDisciplines)
 
     var teacher by TeacherEntity referencedOn TeacherDisciplines.teacher
     var subject by SubjectEntity referencedOn TeacherDisciplines.subject
     var type by LessonTypeEntity referencedOn TeacherDisciplines.type
+
+    override fun toDomain(): TeacherDiscipline = TeacherDiscipline(
+        id = id.value,
+        teacher = teacher.toDomain(),
+        subject = subject.toDomain(),
+        lessonType = type.toDomain()
+    )
 }
