@@ -11,7 +11,6 @@ object Users : UUIDTable(name = "user") {
     val login = varchar("login", 50)
     val password = varchar("password", 255)
     val mail = varchar("mail", 150)
-    val role = enumeration("role", UserRole::class)
 }
 
 class UserEntity(id: EntityID<UUID>): UUIDEntity(id) {
@@ -20,5 +19,5 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id) {
     var login by Users.login
     var password by Users.password
     var mail by Users.mail
-    var role by Users.role
+    var roles by RoleEntity via UserRoles
 }
