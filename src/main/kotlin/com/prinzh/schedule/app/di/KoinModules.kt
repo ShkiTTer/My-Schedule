@@ -54,6 +54,13 @@ val serviceModule = module {
             lessonTypeRepository = get()
         )
     }
+
+    single<IUserService> {
+        UserServiceImpl(
+            userRepository = get(),
+            roleRepository = get()
+        )
+    }
 }
 
 @KtorExperimentalAPI
@@ -66,4 +73,6 @@ val repositoryModule = module {
     singleBy<IGroupRepository, GroupRepositoryImpl>()
     singleBy<ILessonTypeRepository, LessonTypeRepositoryImpl>()
     singleBy<ITeacherDisciplineRepository, TeacherDisciplineRepositoryImpl>()
+    singleBy<IRoleRepository, RoleRepositoryImpl>()
+    singleBy<IUserRepository, UserRepositoryImpl>()
 }

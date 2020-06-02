@@ -14,6 +14,6 @@ object UserRoles: UUIDTable("user_role") {
 class UserRoleEntity(id: EntityID<UUID>): UUIDEntity(id) {
     companion object: UUIDEntityClass<UserRoleEntity>(UserRoles)
 
-    var user by UserRoles.user
-    var role by UserRoles.role
+    var user by UserEntity referencedOn UserRoles.user
+    var role by RoleEntity referencedOn UserRoles.role
 }

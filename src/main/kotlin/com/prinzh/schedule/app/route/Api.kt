@@ -15,5 +15,6 @@ fun Route.api() {
         group()
         lessonType()
         teacherDiscipline()
+        user()
     }
 }

@@ -19,5 +19,5 @@ class RoleEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<Role> {
     var role by Roles.role
     var users by UserEntity via UserRoles
 
-    override fun toDomain(): Role = Role(role)
+    override fun toDomain(): Role = Role(id.value, role)
 }
