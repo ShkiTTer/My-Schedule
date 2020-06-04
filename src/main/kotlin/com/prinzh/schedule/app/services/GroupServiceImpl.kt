@@ -1,6 +1,7 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.requests.GroupRequest
+import com.prinzh.schedule.app.responses.FullGroupResponse
 import com.prinzh.schedule.app.services.interfaces.IGroupService
 import com.prinzh.schedule.domain.entity.Group
 import com.prinzh.schedule.domain.repository.IFacultyRepository
@@ -16,15 +17,19 @@ class GroupServiceImpl(
     private val groupRepository: IGroupRepository,
     private val facultyRepository: IFacultyRepository
 ) : IGroupService {
-    override suspend fun getAll(): List<Group> {
-        return groupRepository.getAll()
+    override suspend fun getAll(): List<FullGroupResponse> {
+        return groupRepository.getAll().map {
+            FullGroupResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun getById(id: UUID): Group {
-        return groupRepository.getById(id) ?: throw NotFoundException()
+    override suspend fun getById(id: UUID): FullGroupResponse {
+        return groupRepository.getById(id)?.let {
+            FullGroupResponse.fromDomain(it)
+        } ?: throw NotFoundException()
     }
 
-    override suspend fun create(data: GroupRequest): Group {
+    override suspend fun create(data: GroupRequest): FullGroupResponse {
         if (data.title.isNullOrEmpty() || data.faculty.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
@@ -56,10 +61,12 @@ class GroupServiceImpl(
             title = data.title,
                 faculty = faculty,
                 parentGroup = parent
-        ))
+        )).let {
+            FullGroupResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun update(id: UUID, data: GroupRequest): Group {
+    override suspend fun update(id: UUID, data: GroupRequest): FullGroupResponse {
         if (data.title.isNullOrEmpty() || data.faculty.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
@@ -91,7 +98,9 @@ class GroupServiceImpl(
                 title = data.title,
                 faculty = faculty,
                 parentGroup = parent
-            ))
+            )).let {
+            FullGroupResponse.fromDomain(it)
+        }
     }
 
     override suspend fun delete(id: UUID) {

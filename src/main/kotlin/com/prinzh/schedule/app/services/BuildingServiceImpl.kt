@@ -1,6 +1,7 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.requests.BuildingRequest
+import com.prinzh.schedule.app.responses.BuildingResponse
 import com.prinzh.schedule.app.services.interfaces.IBuildingService
 import com.prinzh.schedule.domain.entity.Building
 import com.prinzh.schedule.domain.repository.IBuildingRepository
@@ -11,24 +12,32 @@ import java.util.*
 
 @KtorExperimentalAPI
 class BuildingServiceImpl(private val repository: IBuildingRepository) : IBuildingService {
-    override suspend fun getAll(): List<Building> {
-        return repository.getAll()
+    override suspend fun getAll(): List<BuildingResponse> {
+        return repository.getAll().map {
+            BuildingResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun getById(id: UUID): Building {
-        return repository.getById(id) ?: throw NotFoundException()
+    override suspend fun getById(id: UUID): BuildingResponse {
+        return repository.getById(id)?.let {
+            BuildingResponse.fromDomain(it)
+        } ?: throw NotFoundException()
     }
 
-    override suspend fun create(data: BuildingRequest): Building {
+    override suspend fun create(data: BuildingRequest): BuildingResponse {
         if (data.title.isNullOrEmpty() || data.address.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.create(Building(title = data.title, address = data.address))
+        return repository.create(Building(title = data.title, address = data.address)).let {
+            BuildingResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun update(id: UUID, data: BuildingRequest): Building {
+    override suspend fun update(id: UUID, data: BuildingRequest): BuildingResponse {
         if (data.title.isNullOrEmpty() || data.address.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, Building(title = data.title, address = data.address))
+        return repository.update(id, Building(title = data.title, address = data.address)).let {
+            BuildingResponse.fromDomain(it)
+        }
     }
 
     override suspend fun delete(id: UUID) {

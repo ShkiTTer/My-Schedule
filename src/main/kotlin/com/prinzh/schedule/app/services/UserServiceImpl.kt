@@ -1,6 +1,7 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.requests.UserRequest
+import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.domain.entity.Role
 import com.prinzh.schedule.domain.entity.User
@@ -14,15 +15,19 @@ import java.util.*
 @KtorExperimentalAPI
 class UserServiceImpl(private val userRepository: IUserRepository, private val roleRepository: IRoleRepository) :
     IUserService {
-    override suspend fun getAll(): List<User> {
-        return userRepository.getAll()
+    override suspend fun getAll(): List<UserResponse> {
+        return userRepository.getAll().map {
+            UserResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun getById(id: UUID): User {
-        return userRepository.getById(id) ?: throw NotFoundException()
+    override suspend fun getById(id: UUID): UserResponse {
+        return userRepository.getById(id)?.let {
+            UserResponse.fromDomain(it)
+        } ?: throw NotFoundException()
     }
 
-    override suspend fun create(data: UserRequest): User {
+    override suspend fun create(data: UserRequest): UserResponse {
         if (data.login.isNullOrEmpty() || data.password.isNullOrEmpty()
             || data.mail.isNullOrEmpty() || data.roles.isNullOrEmpty()
         ) {
@@ -47,10 +52,12 @@ class UserServiceImpl(private val userRepository: IUserRepository, private val r
                 mail = data.mail,
                 roles = roles
             )
-        )
+        ).let {
+            UserResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun update(id: UUID, data: UserRequest): User {
+    override suspend fun update(id: UUID, data: UserRequest): UserResponse {
         if (data.login.isNullOrEmpty() || data.password.isNullOrEmpty()
             || data.mail.isNullOrEmpty() || data.roles.isNullOrEmpty()
         ) {
@@ -75,7 +82,9 @@ class UserServiceImpl(private val userRepository: IUserRepository, private val r
                 mail = data.mail,
                 roles = roles
             )
-        )
+        ).let {
+            UserResponse.fromDomain(it)
+        }
     }
 
     override suspend fun delete(id: UUID) {

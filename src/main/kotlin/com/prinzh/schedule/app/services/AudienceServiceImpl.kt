@@ -1,10 +1,9 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.requests.AudienceRequest
-import com.prinzh.schedule.app.requests.BuildingRequest
+import com.prinzh.schedule.app.responses.FullAudienceResponse
 import com.prinzh.schedule.app.services.interfaces.IAudienceService
 import com.prinzh.schedule.domain.entity.Audience
-import com.prinzh.schedule.domain.entity.Building
 import com.prinzh.schedule.domain.repository.IAudienceRepository
 import com.prinzh.schedule.domain.repository.IBuildingRepository
 import io.ktor.features.BadRequestException
@@ -17,15 +16,19 @@ class AudienceServiceImpl(
     private val audienceRepository: IAudienceRepository,
     private val buildingRepository: IBuildingRepository
 ) : IAudienceService {
-    override suspend fun getAll(): List<Audience> {
-        return audienceRepository.getAll()
+    override suspend fun getAll(): List<FullAudienceResponse> {
+        return audienceRepository.getAll().map {
+            FullAudienceResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun getById(id: UUID): Audience {
-        return audienceRepository.getById(id) ?: throw NotFoundException()
+    override suspend fun getById(id: UUID): FullAudienceResponse {
+        return audienceRepository.getById(id)?.let {
+            FullAudienceResponse.fromDomain(it)
+        } ?: throw NotFoundException()
     }
 
-    override suspend fun create(data: AudienceRequest): Audience {
+    override suspend fun create(data: AudienceRequest): FullAudienceResponse {
         if (data.audienceNumber.isNullOrEmpty() || data.building.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
@@ -37,10 +40,12 @@ class AudienceServiceImpl(
 
         val building = buildingRepository.getById(buildingId) ?: throw NotFoundException()
 
-        return audienceRepository.create(Audience(audienceNumber = data.audienceNumber, building = building))
+        return audienceRepository.create(Audience(audienceNumber = data.audienceNumber, building = building)).let {
+            FullAudienceResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun update(id: UUID, data: AudienceRequest): Audience {
+    override suspend fun update(id: UUID, data: AudienceRequest): FullAudienceResponse {
         if (data.audienceNumber.isNullOrEmpty() || data.building.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
@@ -53,7 +58,9 @@ class AudienceServiceImpl(
         println("Here")
         val building = buildingRepository.getById(buildingId) ?: throw NotFoundException()
         println("Or Here")
-        return audienceRepository.update(id, Audience(audienceNumber = data.audienceNumber, building = building))
+        return audienceRepository.update(id, Audience(audienceNumber = data.audienceNumber, building = building)).let {
+            FullAudienceResponse.fromDomain(it)
+        }
     }
 
     override suspend fun delete(id: UUID) {

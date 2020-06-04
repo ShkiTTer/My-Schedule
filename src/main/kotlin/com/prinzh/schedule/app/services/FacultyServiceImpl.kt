@@ -1,6 +1,7 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.requests.FacultyRequest
+import com.prinzh.schedule.app.responses.FacultyResponse
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.FacultyEntity
 import com.prinzh.schedule.domain.entity.Faculty
@@ -13,24 +14,32 @@ import java.util.*
 
 @KtorExperimentalAPI
 class FacultyServiceImpl(private val repository: IFacultyRepository) : IFacultyService {
-    override suspend fun getAll(): List<Faculty> {
-        return repository.getAll()
+    override suspend fun getAll(): List<FacultyResponse> {
+        return repository.getAll().map {
+            FacultyResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun getById(id: UUID): Faculty {
-        return repository.getById(id) ?: throw NotFoundException()
+    override suspend fun getById(id: UUID): FacultyResponse {
+        return repository.getById(id)?.let {
+            FacultyResponse.fromDomain(it)
+        } ?: throw NotFoundException()
     }
 
-    override suspend fun create(data: FacultyRequest): Faculty {
+    override suspend fun create(data: FacultyRequest): FacultyResponse {
         if (data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.create(Faculty(title = data.title))
+        return repository.create(Faculty(title = data.title)).let {
+            FacultyResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun update(id: UUID, data: FacultyRequest): Faculty {
+    override suspend fun update(id: UUID, data: FacultyRequest): FacultyResponse {
         if (data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, Faculty(title = data.title))
+        return repository.update(id, Faculty(title = data.title)).let {
+            FacultyResponse.fromDomain(it)
+        }
     }
 
     override suspend fun delete(id: UUID) {

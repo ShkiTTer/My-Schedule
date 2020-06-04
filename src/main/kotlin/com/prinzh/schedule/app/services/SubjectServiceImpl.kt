@@ -1,6 +1,7 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.requests.SubjectRequest
+import com.prinzh.schedule.app.responses.SubjectResponse
 import com.prinzh.schedule.app.services.interfaces.ISubjectService
 import com.prinzh.schedule.domain.entity.Subject
 import com.prinzh.schedule.domain.repository.ISubjectRepository
@@ -11,24 +12,32 @@ import java.util.*
 
 @KtorExperimentalAPI
 class SubjectServiceImpl(private val repository: ISubjectRepository) : ISubjectService {
-    override suspend fun getAll(): List<Subject> {
-        return repository.getAll()
+    override suspend fun getAll(): List<SubjectResponse> {
+        return repository.getAll().map {
+            SubjectResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun getById(id: UUID): Subject {
-        return repository.getById(id) ?: throw NotFoundException()
+    override suspend fun getById(id: UUID): SubjectResponse {
+        return repository.getById(id)?.let {
+            SubjectResponse.fromDomain(it)
+        } ?: throw NotFoundException()
     }
 
-    override suspend fun create(data: SubjectRequest): Subject {
+    override suspend fun create(data: SubjectRequest): SubjectResponse {
         if (data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.create(Subject(title = data.title))
+        return repository.create(Subject(title = data.title)).let {
+            SubjectResponse.fromDomain(it)
+        }
     }
 
-    override suspend fun update(id: UUID, data: SubjectRequest): Subject {
+    override suspend fun update(id: UUID, data: SubjectRequest): SubjectResponse {
         if (data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, Subject(title = data.title))
+        return repository.update(id, Subject(title = data.title)).let {
+            SubjectResponse.fromDomain(it)
+        }
     }
 
     override suspend fun delete(id: UUID) {
