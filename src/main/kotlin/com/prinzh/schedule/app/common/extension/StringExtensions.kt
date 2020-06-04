@@ -5,7 +5,7 @@ import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-fun String.toUUID(): UUID = try {
+fun String?.toUUID(): UUID = try {
     UUID.fromString(this)
 } catch (t: Throwable) {
     throw BadRequestException("Invalid credentials")
