@@ -4,7 +4,7 @@ import com.prinzh.schedule.domain.entity.common.IDataEntity
 import java.util.*
 
 data class Building(
-    val id: UUID? = null,
+    val id: UUID,
     val title: String,
     val address: String
 ): IDataEntity
