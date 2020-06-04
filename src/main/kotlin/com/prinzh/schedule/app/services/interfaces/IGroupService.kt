@@ -4,5 +4,5 @@ import com.prinzh.schedule.app.requests.GroupRequest
 import com.prinzh.schedule.domain.entity.Group
 import java.util.*
 
-interface IGroupService: ICrudService<GroupRequest, Group, UUID> {
+interface IGroupService: ICrudService<GroupRequest, UUID> {
 }

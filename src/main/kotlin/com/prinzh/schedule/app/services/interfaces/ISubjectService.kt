@@ -5,5 +5,5 @@ import com.prinzh.schedule.app.services.interfaces.ICrudService
 import com.prinzh.schedule.domain.entity.Subject
 import java.util.*
 
-interface ISubjectService: ICrudService<SubjectRequest, Subject, UUID> {
+interface ISubjectService: ICrudService<SubjectRequest, UUID> {
 }
