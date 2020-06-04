@@ -7,4 +7,4 @@ data class BuildingResponse(
     val id: UUID,
     val title: String,
     val address: String
-): IResponseContent
+) : IResponseContent
