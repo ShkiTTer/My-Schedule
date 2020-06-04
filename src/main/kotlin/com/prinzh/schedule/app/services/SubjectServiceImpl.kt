@@ -3,7 +3,7 @@ package com.prinzh.schedule.app.services
 import com.prinzh.schedule.app.requests.SubjectRequest
 import com.prinzh.schedule.app.responses.SubjectResponse
 import com.prinzh.schedule.app.services.interfaces.ISubjectService
-import com.prinzh.schedule.domain.entity.Subject
+import com.prinzh.schedule.domain.entity.NewSubject
 import com.prinzh.schedule.domain.repository.ISubjectRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -27,7 +27,7 @@ class SubjectServiceImpl(private val repository: ISubjectRepository) : ISubjectS
     override suspend fun create(data: SubjectRequest): SubjectResponse {
         if (data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.create(Subject(title = data.title)).let {
+        return repository.create(NewSubject(title = data.title)).let {
             SubjectResponse.fromDomain(it)
         }
     }
@@ -35,7 +35,7 @@ class SubjectServiceImpl(private val repository: ISubjectRepository) : ISubjectS
     override suspend fun update(id: UUID, data: SubjectRequest): SubjectResponse {
         if (data.title.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, Subject(title = data.title)).let {
+        return repository.update(id, NewSubject(title = data.title)).let {
             SubjectResponse.fromDomain(it)
         }
     }

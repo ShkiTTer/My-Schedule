@@ -3,7 +3,7 @@ package com.prinzh.schedule.app.services
 import com.prinzh.schedule.app.requests.TeacherRequest
 import com.prinzh.schedule.app.responses.TeacherResponse
 import com.prinzh.schedule.app.services.interfaces.ITeacherService
-import com.prinzh.schedule.domain.entity.Teacher
+import com.prinzh.schedule.domain.entity.NewTeacher
 import com.prinzh.schedule.domain.repository.ITeacherRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -28,11 +28,13 @@ class TeacherServiceImpl(private val repository: ITeacherRepository) : ITeacherS
         if (data.surname.isNullOrEmpty() || data.name.isNullOrEmpty() || data.patronymic.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
-        return repository.create(Teacher(
-            surname = data.surname,
-            name = data.name,
-            patronymic = data.patronymic
-        )).let {
+        return repository.create(
+            NewTeacher(
+                surname = data.surname,
+                name = data.name,
+                patronymic = data.patronymic
+            )
+        ).let {
             TeacherResponse.fromDomain(it)
         }
     }
@@ -41,11 +43,13 @@ class TeacherServiceImpl(private val repository: ITeacherRepository) : ITeacherS
         if (data.surname.isNullOrEmpty() || data.name.isNullOrEmpty() || data.patronymic.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, Teacher(
-            surname = data.surname,
-            name = data.name,
-            patronymic = data.patronymic
-        )).let {
+        return repository.update(
+            id, NewTeacher(
+                surname = data.surname,
+                name = data.name,
+                patronymic = data.patronymic
+            )
+        ).let {
             TeacherResponse.fromDomain(it)
         }
     }

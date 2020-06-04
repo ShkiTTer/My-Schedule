@@ -1,8 +1,10 @@
 package com.prinzh.schedule.app.services
 
+import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.requests.TeacherDisciplineRequest
 import com.prinzh.schedule.app.responses.TeacherDisciplineResponse
 import com.prinzh.schedule.app.services.interfaces.ITeacherDisciplineService
+import com.prinzh.schedule.domain.entity.NewTeacherDiscipline
 import com.prinzh.schedule.domain.entity.TeacherDiscipline
 import com.prinzh.schedule.domain.repository.ILessonTypeRepository
 import com.prinzh.schedule.domain.repository.ISubjectRepository
@@ -15,10 +17,7 @@ import java.util.*
 
 @KtorExperimentalAPI
 class TeacherDisciplineServiceImpl(
-    private val teacherDisciplineRepository: ITeacherDisciplineRepository,
-    private val teacherRepository: ITeacherRepository,
-    private val subjectRepository: ISubjectRepository,
-    private val lessonTypeRepository: ILessonTypeRepository
+    private val teacherDisciplineRepository: ITeacherDisciplineRepository
 ) : ITeacherDisciplineService {
     override suspend fun getAll(): List<TeacherDisciplineResponse> {
         return teacherDisciplineRepository.getAll().map {
@@ -33,19 +32,11 @@ class TeacherDisciplineServiceImpl(
     }
 
     override suspend fun create(data: TeacherDisciplineRequest): TeacherDisciplineResponse {
-        val teacherId = parseId(data.teacher)
-        val subjectId = parseId(data.subject)
-        val lessonTypeId = parseId(data.lessonType)
-
-        val teacher = teacherRepository.getById(teacherId) ?: throw NotFoundException()
-        val subject = subjectRepository.getById(subjectId) ?: throw NotFoundException()
-        val lessonTye = lessonTypeRepository.getById(lessonTypeId) ?: throw NotFoundException()
-
         return teacherDisciplineRepository.create(
-            TeacherDiscipline(
-                teacher = teacher,
-                subject = subject,
-                lessonType = lessonTye
+            NewTeacherDiscipline(
+                teacherId = data.teacher.toUUID(),
+                subjectId = data.subject.toUUID(),
+                typeId = data.lessonType.toUUID()
             )
         ).let {
             TeacherDisciplineResponse.fromDomain(it)
@@ -53,19 +44,12 @@ class TeacherDisciplineServiceImpl(
     }
 
     override suspend fun update(id: UUID, data: TeacherDisciplineRequest): TeacherDisciplineResponse {
-        val teacherId = parseId(data.teacher)
-        val subjectId = parseId(data.subject)
-        val lessonTypeId = parseId(data.lessonType)
-
-        val teacher = teacherRepository.getById(teacherId) ?: throw NotFoundException()
-        val subject = subjectRepository.getById(subjectId) ?: throw NotFoundException()
-        val lessonTye = lessonTypeRepository.getById(lessonTypeId) ?: throw NotFoundException()
-
-        return teacherDisciplineRepository.update(id,
-            TeacherDiscipline(
-                teacher = teacher,
-                subject = subject,
-                lessonType = lessonTye
+        return teacherDisciplineRepository.update(
+            id,
+            NewTeacherDiscipline(
+                teacherId = data.teacher.toUUID(),
+                subjectId = data.subject.toUUID(),
+                typeId = data.lessonType.toUUID()
             )
         ).let {
             TeacherDisciplineResponse.fromDomain(it)
@@ -74,14 +58,5 @@ class TeacherDisciplineServiceImpl(
 
     override suspend fun delete(id: UUID) {
         teacherDisciplineRepository.delete(id)
-    }
-
-    private fun parseId(id: String): UUID {
-        return try {
-            UUID.fromString(id)
-        }
-        catch (e: Exception) {
-            throw BadRequestException("Invalid credentials")
-        }
     }
 }

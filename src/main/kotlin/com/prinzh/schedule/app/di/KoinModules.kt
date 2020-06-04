@@ -28,15 +28,13 @@ val serviceModule = module {
 
     single<IAudienceService> {
         AudienceServiceImpl(
-            audienceRepository = get(),
-            buildingRepository = get()
+            audienceRepository = get()
         )
     }
 
     single<IGroupService> {
         GroupServiceImpl(
-            groupRepository = get(),
-            facultyRepository = get()
+            groupRepository = get()
         )
     }
 
@@ -48,17 +46,13 @@ val serviceModule = module {
 
     single<ITeacherDisciplineService> {
         TeacherDisciplineServiceImpl(
-            teacherDisciplineRepository = get(),
-            teacherRepository = get(),
-            subjectRepository = get(),
-            lessonTypeRepository = get()
+            teacherDisciplineRepository = get()
         )
     }
 
     single<IUserService> {
         UserServiceImpl(
-            userRepository = get(),
-            roleRepository = get()
+            userRepository = get()
         )
     }
 }

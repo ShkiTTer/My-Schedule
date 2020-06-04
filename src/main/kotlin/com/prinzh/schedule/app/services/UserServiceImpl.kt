@@ -1,10 +1,10 @@
 package com.prinzh.schedule.app.services
 
+import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.requests.UserRequest
 import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
-import com.prinzh.schedule.domain.entity.Role
-import com.prinzh.schedule.domain.entity.User
+import com.prinzh.schedule.domain.entity.NewUser
 import com.prinzh.schedule.domain.repository.IRoleRepository
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.BadRequestException
@@ -13,7 +13,7 @@ import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class UserServiceImpl(private val userRepository: IUserRepository, private val roleRepository: IRoleRepository) :
+class UserServiceImpl(private val userRepository: IUserRepository) :
     IUserService {
     override suspend fun getAll(): List<UserResponse> {
         return userRepository.getAll().map {
@@ -34,23 +34,12 @@ class UserServiceImpl(private val userRepository: IUserRepository, private val r
             throw BadRequestException("Invalid credentials")
         }
 
-        val roles = mutableListOf<Role>()
-        data.roles.forEach {
-            val roleId = try {
-                UUID.fromString(it)
-            } catch (e: Exception) {
-                throw BadRequestException("Invalid credentials")
-            }
-
-            roles.add(roleRepository.getById(roleId) ?: throw NotFoundException())
-        }
-
         return userRepository.create(
-            User(
+            NewUser(
                 login = data.login,
                 password = data.password,
                 mail = data.mail,
-                roles = roles
+                roles = data.roles.map { it.toUUID() }
             )
         ).let {
             UserResponse.fromDomain(it)
@@ -64,23 +53,12 @@ class UserServiceImpl(private val userRepository: IUserRepository, private val r
             throw BadRequestException("Invalid credentials")
         }
 
-        val roles = mutableListOf<Role>()
-        data.roles.forEach {
-            val roleId = try {
-                UUID.fromString(it)
-            } catch (e: Exception) {
-                throw BadRequestException("Invalid credentials")
-            }
-
-            roles.add(roleRepository.getById(roleId) ?: throw NotFoundException())
-        }
-
         return userRepository.update(id,
-            User(
+            NewUser(
                 login = data.login,
                 password = data.password,
                 mail = data.mail,
-                roles = roles
+                roles = data.roles.map { it.toUUID() }
             )
         ).let {
             UserResponse.fromDomain(it)

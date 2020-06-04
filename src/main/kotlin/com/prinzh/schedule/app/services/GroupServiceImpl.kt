@@ -1,21 +1,19 @@
 package com.prinzh.schedule.app.services
 
+import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.requests.GroupRequest
 import com.prinzh.schedule.app.responses.FullGroupResponse
 import com.prinzh.schedule.app.services.interfaces.IGroupService
-import com.prinzh.schedule.domain.entity.Group
-import com.prinzh.schedule.domain.repository.IFacultyRepository
+import com.prinzh.schedule.domain.entity.NewGroup
 import com.prinzh.schedule.domain.repository.IGroupRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
-import java.lang.Exception
 import java.util.*
 
 @KtorExperimentalAPI
 class GroupServiceImpl(
-    private val groupRepository: IGroupRepository,
-    private val facultyRepository: IFacultyRepository
+    private val groupRepository: IGroupRepository
 ) : IGroupService {
     override suspend fun getAll(): List<FullGroupResponse> {
         return groupRepository.getAll().map {
@@ -33,35 +31,13 @@ class GroupServiceImpl(
         if (data.title.isNullOrEmpty() || data.faculty.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
-        val facultyId = try {
-            UUID.fromString(data.faculty)
-        }
-        catch (e: Exception) {
-            throw BadRequestException("Invalid credentials")
-        }
-
-        val parentId = if (!data.parentGroup.isNullOrEmpty()) {
-            try {
-                UUID.fromString(data.parentGroup)
-            }
-            catch (e: Exception) {
-                throw BadRequestException("Invalid credentials")
-            }
-        }
-        else null
-
-        val faculty = facultyRepository.getById(facultyId) ?: throw NotFoundException()
-        val parent = if (parentId != null) {
-            groupRepository.getById(parentId) ?: throw NotFoundException()
-        }
-        else null
-
         return groupRepository.create(
-            Group(
-            title = data.title,
-                faculty = faculty,
-                parentGroup = parent
-        )).let {
+            NewGroup(
+                title = data.title,
+                facultyId = data.faculty.toUUID(),
+                parentId = data.parentGroup?.toUUID()
+            )
+        ).let {
             FullGroupResponse.fromDomain(it)
         }
     }
@@ -70,35 +46,14 @@ class GroupServiceImpl(
         if (data.title.isNullOrEmpty() || data.faculty.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
-        val facultyId = try {
-            UUID.fromString(data.faculty)
-        }
-        catch (e: Exception) {
-            throw BadRequestException("Invalid credentials")
-        }
-
-        val parentId = if (!data.parentGroup.isNullOrEmpty()) {
-            try {
-                UUID.fromString(data.parentGroup)
-            }
-            catch (e: Exception) {
-                throw BadRequestException("Invalid credentials")
-            }
-        }
-        else null
-
-        val faculty = facultyRepository.getById(facultyId) ?: throw NotFoundException()
-        val parent = if (parentId != null) {
-            groupRepository.getById(parentId) ?: throw NotFoundException()
-        }
-        else null
-
-        return groupRepository.update(id,
-            Group(
+        return groupRepository.update(
+            id,
+            NewGroup(
                 title = data.title,
-                faculty = faculty,
-                parentGroup = parent
-            )).let {
+                facultyId = data.faculty.toUUID(),
+                parentId = data.parentGroup?.toUUID()
+            )
+        ).let {
             FullGroupResponse.fromDomain(it)
         }
     }

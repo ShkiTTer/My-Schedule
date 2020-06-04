@@ -3,7 +3,7 @@ package com.prinzh.schedule.app.services
 import com.prinzh.schedule.app.requests.LessonTypeRequest
 import com.prinzh.schedule.app.responses.LessonTypeResponse
 import com.prinzh.schedule.app.services.interfaces.ILessonTypeService
-import com.prinzh.schedule.domain.entity.LessonType
+import com.prinzh.schedule.domain.entity.NewLessonType
 import com.prinzh.schedule.domain.repository.ILessonTypeRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -27,7 +27,7 @@ class LessonTypeServiceImpl(private val repository: ILessonTypeRepository) : ILe
     override suspend fun create(data: LessonTypeRequest): LessonTypeResponse {
         if (data.type.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.create(LessonType(type = data.type)).let {
+        return repository.create(NewLessonType(type = data.type)).let {
             LessonTypeResponse.fromDomain(it)
         }
     }
@@ -35,7 +35,7 @@ class LessonTypeServiceImpl(private val repository: ILessonTypeRepository) : ILe
     override suspend fun update(id: UUID, data: LessonTypeRequest): LessonTypeResponse {
         if (data.type.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, LessonType(type = data.type)).let {
+        return repository.update(id, NewLessonType(type = data.type)).let {
             LessonTypeResponse.fromDomain(it)
         }
     }

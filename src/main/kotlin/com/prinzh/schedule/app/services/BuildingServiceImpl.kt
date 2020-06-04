@@ -3,7 +3,7 @@ package com.prinzh.schedule.app.services
 import com.prinzh.schedule.app.requests.BuildingRequest
 import com.prinzh.schedule.app.responses.BuildingResponse
 import com.prinzh.schedule.app.services.interfaces.IBuildingService
-import com.prinzh.schedule.domain.entity.Building
+import com.prinzh.schedule.domain.entity.NewBuilding
 import com.prinzh.schedule.domain.repository.IBuildingRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -27,7 +27,7 @@ class BuildingServiceImpl(private val repository: IBuildingRepository) : IBuildi
     override suspend fun create(data: BuildingRequest): BuildingResponse {
         if (data.title.isNullOrEmpty() || data.address.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.create(Building(title = data.title, address = data.address)).let {
+        return repository.create(NewBuilding(title = data.title, address = data.address)).let {
             BuildingResponse.fromDomain(it)
         }
     }
@@ -35,7 +35,7 @@ class BuildingServiceImpl(private val repository: IBuildingRepository) : IBuildi
     override suspend fun update(id: UUID, data: BuildingRequest): BuildingResponse {
         if (data.title.isNullOrEmpty() || data.address.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
 
-        return repository.update(id, Building(title = data.title, address = data.address)).let {
+        return repository.update(id, NewBuilding(title = data.title, address = data.address)).let {
             BuildingResponse.fromDomain(it)
         }
     }
