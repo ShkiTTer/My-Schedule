@@ -3,6 +3,7 @@ package com.prinzh.schedule.data.repository
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.LessonTypeEntity
 import com.prinzh.schedule.domain.entity.LessonType
+import com.prinzh.schedule.domain.entity.NewLessonType
 import com.prinzh.schedule.domain.repository.ILessonTypeRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
@@ -18,13 +19,13 @@ class LessonTypeRepositoryImpl : ILessonTypeRepository {
         LessonTypeEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: LessonType): LessonType = dbQuery {
+    override suspend fun create(entity: NewLessonType): LessonType = dbQuery {
         LessonTypeEntity.new {
             type = entity.type
         }.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: LessonType): LessonType = dbQuery {
+    override suspend fun update(id: UUID, entity: NewLessonType): LessonType = dbQuery {
         val lesson = LessonTypeEntity.findById(id) ?: throw NotFoundException()
 
         lesson.apply {

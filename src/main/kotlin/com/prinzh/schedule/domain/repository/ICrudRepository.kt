@@ -1,9 +1,12 @@
 package com.prinzh.schedule.domain.repository
 
-interface ICrudRepository<T, ID> {
-    suspend fun getAll(): List<T>
-    suspend fun getById(id: ID): T?
-    suspend fun create(entity: T): T
-    suspend fun update(id: ID, entity: T): T
+import com.prinzh.schedule.domain.entity.common.IDataEntity
+import com.prinzh.schedule.domain.entity.common.INewEntity
+
+interface ICrudRepository<NEW: INewEntity, DATA: IDataEntity, ID> {
+    suspend fun getAll(): List<DATA>
+    suspend fun getById(id: ID): DATA?
+    suspend fun create(entity: NEW): DATA
+    suspend fun update(id: ID, entity: NEW): DATA
     suspend fun delete(id: ID)
 }

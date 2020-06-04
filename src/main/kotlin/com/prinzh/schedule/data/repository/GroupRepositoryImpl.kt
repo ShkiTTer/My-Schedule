@@ -4,6 +4,7 @@ import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.FacultyEntity
 import com.prinzh.schedule.data.db.entity.GroupEntity
 import com.prinzh.schedule.domain.entity.Group
+import com.prinzh.schedule.domain.entity.NewGroup
 import com.prinzh.schedule.domain.repository.IGroupRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
@@ -19,12 +20,11 @@ class GroupRepositoryImpl: IGroupRepository {
         GroupEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: Group): Group = dbQuery {
-        val faculty = FacultyEntity.findById(entity.faculty.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
+    override suspend fun create(entity: NewGroup): Group = dbQuery {
+        val faculty = FacultyEntity.findById(entity.facultyId) ?: throw NotFoundException()
 
-        val parent = if (entity.parentGroup != null)
-            GroupEntity.findById(entity.parentGroup.id ?: throw NotFoundException())
+        val parent = if (entity.parentId != null)
+            GroupEntity.findById(entity.parentId)
         else null
 
         GroupEntity.new {
@@ -34,14 +34,13 @@ class GroupRepositoryImpl: IGroupRepository {
         }.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: Group): Group = dbQuery {
+    override suspend fun update(id: UUID, entity: NewGroup): Group = dbQuery {
         val group = GroupEntity.findById(id) ?: throw NotFoundException()
 
-        val faculty = FacultyEntity.findById(entity.faculty.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
+        val faculty = FacultyEntity.findById(entity.facultyId) ?: throw NotFoundException()
 
-        val parent = if (entity.parentGroup != null)
-            GroupEntity.findById(entity.parentGroup.id ?: throw NotFoundException())
+        val parent = if (entity.parentId != null)
+            GroupEntity.findById(entity.parentId)
         else null
 
         group.apply {

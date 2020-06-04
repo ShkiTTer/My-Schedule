@@ -3,6 +3,7 @@ package com.prinzh.schedule.data.repository
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.FacultyEntity
 import com.prinzh.schedule.domain.entity.Faculty
+import com.prinzh.schedule.domain.entity.NewFaculty
 import com.prinzh.schedule.domain.repository.IFacultyRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
@@ -18,13 +19,13 @@ class FacultyRepositoryImpl : IFacultyRepository {
         FacultyEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: Faculty): Faculty = dbQuery {
+    override suspend fun create(entity: NewFaculty): Faculty = dbQuery {
         FacultyEntity.new {
             title = entity.title
         }.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: Faculty) = dbQuery {
+    override suspend fun update(id: UUID, entity: NewFaculty) = dbQuery {
         val faculty = FacultyEntity.findById(id) ?: throw NotFoundException()
 
         faculty.apply {

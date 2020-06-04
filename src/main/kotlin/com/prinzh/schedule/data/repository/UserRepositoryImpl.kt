@@ -2,6 +2,7 @@ package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.*
+import com.prinzh.schedule.domain.entity.NewUser
 import com.prinzh.schedule.domain.entity.User
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.NotFoundException
@@ -21,11 +22,11 @@ class UserRepositoryImpl: IUserRepository {
         UserEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: User): User = dbQuery {
+    override suspend fun create(entity: NewUser): User = dbQuery {
         val roles = mutableListOf<RoleEntity>()
 
         entity.roles.forEach {
-            roles.add(RoleEntity.findById(it.id!!) ?: throw NotFoundException())
+            roles.add(RoleEntity.findById(it) ?: throw NotFoundException())
         }
 
         val user = UserEntity.new {
@@ -44,14 +45,14 @@ class UserRepositoryImpl: IUserRepository {
         user.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: User): User = dbQuery {
+    override suspend fun update(id: UUID, entity: NewUser): User = dbQuery {
         val user = UserEntity.findById(id) ?: throw NotFoundException()
         val roles = mutableListOf<RoleEntity>()
         val deleteRoles = mutableListOf<RoleEntity>()
         val addRoles = mutableListOf<RoleEntity>()
 
         entity.roles.forEach {
-            val role = RoleEntity.findById(it.id!!) ?: throw NotFoundException()
+            val role = RoleEntity.findById(it) ?: throw NotFoundException()
             roles.add(role)
 
             if (!user.roles.contains(role)) {

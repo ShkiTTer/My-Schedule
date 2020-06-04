@@ -1,5 +1,6 @@
 package com.prinzh.schedule.domain.entity
 
+import com.prinzh.schedule.domain.entity.common.IDataEntity
 import java.util.*
 
 data class User(
@@ -8,4 +9,4 @@ data class User(
     val password: String,
     val mail: String,
     val roles: List<Role>
-)
+): IDataEntity

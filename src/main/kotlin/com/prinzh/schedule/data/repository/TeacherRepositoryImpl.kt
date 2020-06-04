@@ -2,6 +2,7 @@ package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.TeacherEntity
+import com.prinzh.schedule.domain.entity.NewTeacher
 import com.prinzh.schedule.domain.entity.Teacher
 import com.prinzh.schedule.domain.repository.ITeacherRepository
 import io.ktor.features.NotFoundException
@@ -18,7 +19,7 @@ class TeacherRepositoryImpl: ITeacherRepository {
         TeacherEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: Teacher): Teacher = dbQuery {
+    override suspend fun create(entity: NewTeacher): Teacher = dbQuery {
         TeacherEntity.new {
             surname = entity.surname
             name = entity.name
@@ -26,7 +27,7 @@ class TeacherRepositoryImpl: ITeacherRepository {
         }.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: Teacher): Teacher = dbQuery {
+    override suspend fun update(id: UUID, entity: NewTeacher): Teacher = dbQuery {
         val teacher = TeacherEntity.findById(id) ?: throw NotFoundException()
 
         teacher.apply {

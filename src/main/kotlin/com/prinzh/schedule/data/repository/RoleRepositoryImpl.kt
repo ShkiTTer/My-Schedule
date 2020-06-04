@@ -17,23 +17,4 @@ class RoleRepositoryImpl: IRoleRepository {
     override suspend fun getById(id: UUID): Role? = dbQuery {
         RoleEntity.findById(id)?.toDomain()
     }
-
-    override suspend fun create(entity: Role): Role = dbQuery {
-        RoleEntity.new {
-            role = entity.role
-        }.toDomain()
-    }
-
-    override suspend fun update(id: UUID, entity: Role): Role = dbQuery {
-        val role = RoleEntity.findById(id) ?: throw NotFoundException()
-
-        role.apply {
-            this.role = entity.role
-        }.toDomain()
-    }
-
-    override suspend fun delete(id: UUID) = dbQuery {
-        val role = RoleEntity.findById(id) ?: throw NotFoundException()
-        role.delete()
-    }
 }

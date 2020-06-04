@@ -5,6 +5,7 @@ import com.prinzh.schedule.data.db.entity.AudienceEntity
 import com.prinzh.schedule.data.db.entity.BuildingEntity
 import com.prinzh.schedule.domain.entity.Audience
 import com.prinzh.schedule.domain.entity.Building
+import com.prinzh.schedule.domain.entity.NewAudience
 import com.prinzh.schedule.domain.repository.IAudienceRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
@@ -20,9 +21,8 @@ class AudienceRepositoryImpl : IAudienceRepository {
         AudienceEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: Audience): Audience = dbQuery {
-        val building = BuildingEntity.findById(entity.building.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
+    override suspend fun create(entity: NewAudience): Audience = dbQuery {
+        val building = BuildingEntity.findById(entity.buildingId) ?: throw NotFoundException()
 
         AudienceEntity.new {
             this.audienceNumber = entity.audienceNumber
@@ -30,12 +30,11 @@ class AudienceRepositoryImpl : IAudienceRepository {
         }.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: Audience): Audience = dbQuery {
+    override suspend fun update(id: UUID, entity: NewAudience): Audience = dbQuery {
         val audience = AudienceEntity.findById(id)
             ?: throw NotFoundException()
 
-        val building = BuildingEntity.findById(entity.building.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
+        val building = BuildingEntity.findById(entity.buildingId) ?: throw NotFoundException()
 
         audience.apply {
             this.audienceNumber = entity.audienceNumber

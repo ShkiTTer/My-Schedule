@@ -1,5 +1,6 @@
 package com.prinzh.schedule.domain.entity
 
+import com.prinzh.schedule.domain.entity.common.INewEntity
 import java.util.*
 
 data class NewUser(
@@ -7,4 +8,4 @@ data class NewUser(
     val password: String,
     val mail: String,
     val roles: List<UUID>
-)
+): INewEntity

@@ -2,6 +2,7 @@ package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.*
+import com.prinzh.schedule.domain.entity.NewTeacherDiscipline
 import com.prinzh.schedule.domain.entity.TeacherDiscipline
 import com.prinzh.schedule.domain.repository.ITeacherDisciplineRepository
 import io.ktor.features.NotFoundException
@@ -18,15 +19,10 @@ class TeacherDisciplineRepositoryImpl: ITeacherDisciplineRepository {
         TeacherDisciplineEntity.findById(id)?.toDomain()
     }
 
-    override suspend fun create(entity: TeacherDiscipline): TeacherDiscipline = dbQuery {
-        val teacher = TeacherEntity.findById(entity.teacher.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
-
-        val subject = SubjectEntity.findById(entity.subject.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
-
-        val type = LessonTypeEntity.findById(entity.lessonType.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
+    override suspend fun create(entity: NewTeacherDiscipline): TeacherDiscipline = dbQuery {
+        val teacher = TeacherEntity.findById(entity.teacherId) ?: throw NotFoundException()
+        val subject = SubjectEntity.findById(entity.subjectId) ?: throw NotFoundException()
+        val type = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
 
         TeacherDisciplineEntity.new {
             this.teacher = teacher
@@ -35,18 +31,12 @@ class TeacherDisciplineRepositoryImpl: ITeacherDisciplineRepository {
         }.toDomain()
     }
 
-    override suspend fun update(id: UUID, entity: TeacherDiscipline): TeacherDiscipline = dbQuery {
-        val discipline = TeacherDisciplineEntity.findById(id)
-            ?: throw NotFoundException()
+    override suspend fun update(id: UUID, entity: NewTeacherDiscipline): TeacherDiscipline = dbQuery {
+        val discipline = TeacherDisciplineEntity.findById(id) ?: throw NotFoundException()
 
-        val teacher = TeacherEntity.findById(entity.teacher.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
-
-        val subject = SubjectEntity.findById(entity.subject.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
-
-        val type = LessonTypeEntity.findById(entity.lessonType.id ?: throw NotFoundException())
-            ?: throw NotFoundException()
+        val teacher = TeacherEntity.findById(entity.teacherId) ?: throw NotFoundException()
+        val subject = SubjectEntity.findById(entity.subjectId) ?: throw NotFoundException()
+        val type = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
 
         discipline.apply {
             this.teacher = teacher
