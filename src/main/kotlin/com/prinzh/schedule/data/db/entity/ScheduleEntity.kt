@@ -16,13 +16,15 @@ object Schedules : UUIDTable("schedule") {
     val day = integer("day").check { column ->
         column.between(1, 7)
     }
-    val time = varchar("time", 5)
+    val lessonNumber = integer("lesson_number").check { column ->
+        column.between(1, 7)
+    }
     val weekStart = integer("week_start")
     val weekEnd = integer("week_end")
 }
 
-class ScheduleEntity(id: EntityID<UUID>): UUIDEntity(id) {
-    companion object: UUIDEntityClass<ScheduleEntity>(Schedules)
+class ScheduleEntity(id: EntityID<UUID>) : UUIDEntity(id) {
+    companion object : UUIDEntityClass<ScheduleEntity>(Schedules)
 
     var group by GroupEntity referencedOn Schedules.group
     var discipline by TeacherDisciplineEntity referencedOn Schedules.discipline
@@ -30,7 +32,7 @@ class ScheduleEntity(id: EntityID<UUID>): UUIDEntity(id) {
     var type by LessonTypeEntity referencedOn Schedules.type
 
     var day by Schedules.day
-    var time by Schedules.time
+    var time by Schedules.lessonNumber
     var weekStart by Schedules.weekStart
     var weekEnd by Schedules.weekEnd
 }
