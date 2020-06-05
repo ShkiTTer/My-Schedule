@@ -11,12 +11,10 @@ import org.jetbrains.exposed.sql.SchemaUtils
  */
 class M20200531134204589_AddRoles : AbstractMigration() {
     override fun up() {
-        removeColumn(Users.tableName, "role")
         SchemaUtils.create(Roles, UserRoles)
     }
 
     override fun down() {
         SchemaUtils.drop(UserRoles, Roles)
-        addIntegerColumn(UserRoles.tableName, "role")
     }
 }

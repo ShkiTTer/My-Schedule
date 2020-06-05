@@ -33,6 +33,7 @@ class UserRepositoryImpl: IUserRepository {
             login = entity.login
             password = entity.password
             mail = entity.mail
+            salt = entity.salt
         }
 
         roles.forEach {
@@ -83,6 +84,7 @@ class UserRepositoryImpl: IUserRepository {
             login = entity.login
             password = entity.password
             mail = entity.mail
+            salt = entity.salt
         }.toDomain()
     }
 

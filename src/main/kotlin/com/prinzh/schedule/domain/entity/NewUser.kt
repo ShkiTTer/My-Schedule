@@ -7,5 +7,6 @@ data class NewUser(
     val login: String,
     val password: String,
     val mail: String,
+    val salt: ByteArray,
     val roles: List<UUID>
 ): INewEntity

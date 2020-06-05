@@ -8,5 +8,6 @@ data class User(
     val login: String,
     val password: String,
     val mail: String,
+    val salt: ByteArray,
     val roles: List<Role>
 ): IDataEntity

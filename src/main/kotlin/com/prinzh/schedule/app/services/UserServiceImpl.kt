@@ -1,6 +1,7 @@
 package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.common.extension.toUUID
+import com.prinzh.schedule.app.common.util.HashUtil
 import com.prinzh.schedule.app.requests.UserRequest
 import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
@@ -34,11 +35,14 @@ class UserServiceImpl(private val userRepository: IUserRepository) :
             throw BadRequestException("Invalid credentials")
         }
 
+        val salt = HashUtil.generateSalt()
+
         return userRepository.create(
             NewUser(
                 login = data.login,
-                password = data.password,
+                password = HashUtil.hash(data.password, salt),
                 mail = data.mail,
+                salt = salt,
                 roles = data.roles.map { it.toUUID() }
             )
         ).let {
@@ -53,11 +57,14 @@ class UserServiceImpl(private val userRepository: IUserRepository) :
             throw BadRequestException("Invalid credentials")
         }
 
+        val salt = HashUtil.generateSalt()
+
         return userRepository.update(id,
             NewUser(
                 login = data.login,
-                password = data.password,
+                password = HashUtil.hash(data.password, salt),
                 mail = data.mail,
+                salt = salt,
                 roles = data.roles.map { it.toUUID() }
             )
         ).let {

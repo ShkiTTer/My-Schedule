@@ -10,9 +10,10 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
 object Users : UUIDTable(name = "user") {
-    val login = varchar("login", 50)
+    val login = varchar("login", 50).uniqueIndex()
     val password = varchar("password", 255)
-    val mail = varchar("mail", 150)
+    val mail = varchar("mail", 150).uniqueIndex()
+    val salt = binary("salt", 16)
 }
 
 class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
@@ -21,6 +22,7 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
     var login by Users.login
     var password by Users.password
     var mail by Users.mail
+    var salt by Users.salt
     var roles by RoleEntity via UserRoles
 
     override fun toDomain(): User = User(
@@ -28,6 +30,7 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
         login = login,
         password = password,
         mail = mail,
+        salt = salt,
         roles = roles.map { it.toDomain() }
     )
 }
