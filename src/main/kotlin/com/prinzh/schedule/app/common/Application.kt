@@ -1,16 +1,19 @@
 package com.prinzh.schedule.app.common
 
+import com.google.gson.GsonBuilder
 import com.prinzh.schedule.app.di.repositoryModule
 import com.prinzh.schedule.app.di.serviceModule
-import com.prinzh.schedule.app.route.api
-import com.prinzh.schedule.data.db.common.DatabaseFactory
 import com.prinzh.schedule.app.responses.common.EmptyResponse
 import com.prinzh.schedule.app.responses.common.ResponseInfo
+import com.prinzh.schedule.app.route.api
+import com.prinzh.schedule.data.db.common.DatabaseFactory
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.*
-import io.ktor.gson.gson
+import io.ktor.gson.GsonConverter
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -37,15 +40,29 @@ fun main(args: Array<String>) {
             filter { call -> call.request.path().startsWith("/") }
         }
 
+        install(CORS) {
+            method(HttpMethod.Get)
+            method(HttpMethod.Post)
+            method(HttpMethod.Put)
+            method(HttpMethod.Delete)
+
+            header(HttpHeaders.ContentType)
+            header(HttpHeaders.Authorization)
+            header(HttpHeaders.AccessControlAllowOrigin)
+
+            allowCredentials = true
+            anyHost()
+        }
+
         install(DefaultHeaders) {
             header("X-Engine", "Ktor") // will send this header with each response
         }
 
         install(ContentNegotiation) {
-            gson {
+            register(ContentType.Application.Json, GsonConverter(GsonBuilder().apply {
                 setDateFormat(DateFormat.MEDIUM, DateFormat.MEDIUM)
                 setPrettyPrinting()
-            }
+            }.create()))
         }
 
         install(StatusPages) {
