@@ -5,6 +5,5 @@ import java.util.*
 
 data class NewTeacherDiscipline(
     val teacherId: UUID,
-    val subjectId: UUID,
-    val typeId: UUID
+    val subjectId: UUID
 ): INewEntity

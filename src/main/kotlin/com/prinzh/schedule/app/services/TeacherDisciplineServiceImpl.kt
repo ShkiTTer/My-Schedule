@@ -35,8 +35,7 @@ class TeacherDisciplineServiceImpl(
         return teacherDisciplineRepository.create(
             NewTeacherDiscipline(
                 teacherId = data.teacher.toUUID(),
-                subjectId = data.subject.toUUID(),
-                typeId = data.lessonType.toUUID()
+                subjectId = data.subject.toUUID()
             )
         ).let {
             TeacherDisciplineResponse.fromDomain(it)
@@ -48,8 +47,7 @@ class TeacherDisciplineServiceImpl(
             id,
             NewTeacherDiscipline(
                 teacherId = data.teacher.toUUID(),
-                subjectId = data.subject.toUUID(),
-                typeId = data.lessonType.toUUID()
+                subjectId = data.subject.toUUID()
             )
         ).let {
             TeacherDisciplineResponse.fromDomain(it)

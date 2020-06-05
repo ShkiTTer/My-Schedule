@@ -22,12 +22,10 @@ class TeacherDisciplineRepositoryImpl: ITeacherDisciplineRepository {
     override suspend fun create(entity: NewTeacherDiscipline): TeacherDiscipline = dbQuery {
         val teacher = TeacherEntity.findById(entity.teacherId) ?: throw NotFoundException()
         val subject = SubjectEntity.findById(entity.subjectId) ?: throw NotFoundException()
-        val type = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
 
         TeacherDisciplineEntity.new {
             this.teacher = teacher
             this.subject = subject
-            this.type = type
         }.toDomain()
     }
 
@@ -36,12 +34,10 @@ class TeacherDisciplineRepositoryImpl: ITeacherDisciplineRepository {
 
         val teacher = TeacherEntity.findById(entity.teacherId) ?: throw NotFoundException()
         val subject = SubjectEntity.findById(entity.subjectId) ?: throw NotFoundException()
-        val type = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
 
         discipline.apply {
             this.teacher = teacher
             this.subject = subject
-            this.type = type
         }.toDomain()
     }
 

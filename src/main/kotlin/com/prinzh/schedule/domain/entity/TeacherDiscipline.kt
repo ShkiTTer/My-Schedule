@@ -6,6 +6,5 @@ import java.util.*
 data class TeacherDiscipline(
     val id: UUID,
     val teacher: Teacher,
-    val subject: Subject,
-    val lessonType: LessonType
+    val subject: Subject
 ): IDataEntity

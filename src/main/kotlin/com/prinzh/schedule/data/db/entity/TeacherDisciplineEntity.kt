@@ -12,7 +12,6 @@ import java.util.*
 object TeacherDisciplines: UUIDTable("teacher_discipline") {
     val teacher = reference("teacher", Teachers, ReferenceOption.CASCADE)
     val subject = reference("subject", Subjects, ReferenceOption.CASCADE)
-    val type = reference("type", LessonTypes, ReferenceOption.CASCADE)
 }
 
 class TeacherDisciplineEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<TeacherDiscipline> {
@@ -20,12 +19,10 @@ class TeacherDisciplineEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConver
 
     var teacher by TeacherEntity referencedOn TeacherDisciplines.teacher
     var subject by SubjectEntity referencedOn TeacherDisciplines.subject
-    var type by LessonTypeEntity referencedOn TeacherDisciplines.type
 
     override fun toDomain(): TeacherDiscipline = TeacherDiscipline(
         id = id.value,
         teacher = teacher.toDomain(),
-        subject = subject.toDomain(),
-        lessonType = type.toDomain()
+        subject = subject.toDomain()
     )
 }

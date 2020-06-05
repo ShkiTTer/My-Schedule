@@ -9,15 +9,13 @@ import java.util.*
 data class TeacherDisciplineResponse(
     val id: UUID,
     val teacher: TeacherResponse,
-    val subject: SubjectResponse,
-    val type: LessonTypeResponse
+    val subject: SubjectResponse
 ) : IResponseContent {
     companion object : IResponseConverter<TeacherDiscipline, TeacherDisciplineResponse> {
         override fun fromDomain(data: TeacherDiscipline): TeacherDisciplineResponse = TeacherDisciplineResponse(
-            data.id!!,
+            data.id,
             TeacherResponse.fromDomain(data.teacher),
-            SubjectResponse.fromDomain(data.subject),
-            LessonTypeResponse.fromDomain(data.lessonType)
+            SubjectResponse.fromDomain(data.subject)
         )
     }
 }
