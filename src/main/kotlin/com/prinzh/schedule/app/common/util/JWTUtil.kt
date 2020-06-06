@@ -28,7 +28,7 @@ object JWTUtil {
         .withIssuer(ISSUER)
         .withExpiresAt(expired)
         .withClaim("id", user.id.toString())
-        .withArrayClaim("roles", user.roles.map { it.role.toString() }.toTypedArray())
+        .withArrayClaim("roles", user.roles.map { it.id.toString() }.toTypedArray())
         .sign(algorithm)
 
     private fun generateRefreshToken(accessToken: String, expired: Date): String {
