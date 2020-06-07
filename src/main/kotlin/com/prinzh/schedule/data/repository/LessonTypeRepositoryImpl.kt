@@ -22,6 +22,7 @@ class LessonTypeRepositoryImpl : ILessonTypeRepository {
     override suspend fun create(entity: NewLessonType): LessonType = dbQuery {
         LessonTypeEntity.new {
             type = entity.type
+            color = entity.color
         }.toDomain()
     }
 
@@ -30,6 +31,7 @@ class LessonTypeRepositoryImpl : ILessonTypeRepository {
 
         lesson.apply {
             type = entity.type
+            color = entity.color
         }.toDomain()
     }
 

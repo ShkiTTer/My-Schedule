@@ -8,12 +8,14 @@ import java.util.*
 
 data class LessonTypeResponse(
     val id: UUID,
-    val type: String
+    val type: String,
+    val color: String
 ) : IResponseContent {
     companion object : IResponseConverter<LessonType, LessonTypeResponse> {
         override fun fromDomain(data: LessonType): LessonTypeResponse = LessonTypeResponse(
-            data.id!!,
-            data.type
+            data.id,
+            data.type,
+            "#" + data.color
         )
     }
 }

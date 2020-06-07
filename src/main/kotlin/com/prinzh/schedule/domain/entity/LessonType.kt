@@ -5,5 +5,6 @@ import java.util.*
 
 data class LessonType(
     val id: UUID,
-    val type: String
+    val type: String,
+    val color: String
 ): IDataEntity
