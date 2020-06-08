@@ -1,0 +1,64 @@
+package com.prinzh.schedule.data.repository
+
+import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
+import com.prinzh.schedule.data.db.entity.*
+import com.prinzh.schedule.domain.entity.NewSchedule
+import com.prinzh.schedule.domain.entity.Schedule
+import com.prinzh.schedule.domain.repository.IScheduleRepository
+import io.ktor.features.NotFoundException
+import io.ktor.util.KtorExperimentalAPI
+import java.util.*
+
+@KtorExperimentalAPI
+class ScheduleRepository: IScheduleRepository {
+    override suspend fun getAll(): List<Schedule> = dbQuery {
+        ScheduleEntity.all().map { it.toDomain() }
+    }
+
+    override suspend fun getById(id: UUID): Schedule? = dbQuery {
+        ScheduleEntity.findById(id)?.toDomain()
+    }
+
+    override suspend fun create(entity: NewSchedule): Schedule = dbQuery {
+        val group = GroupEntity.findById(entity.groupId) ?: throw NotFoundException()
+        val discipline = TeacherDisciplineEntity.findById(entity.disciplineId) ?: throw NotFoundException()
+        val audience = AudienceEntity.findById(entity.audienceId) ?: throw NotFoundException()
+        val lessonType = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
+
+        ScheduleEntity.new {
+            this.group = group
+            this.discipline = discipline
+            this.audience = audience
+            this.type = lessonType
+            this.day = day
+            this.lessonNumber = lessonNumber
+            this.weekStart = weekStart
+            this.weekEnd = weekEnd
+        }.toDomain()
+    }
+
+    override suspend fun update(id: UUID, entity: NewSchedule): Schedule = dbQuery {
+        val schedule = ScheduleEntity.findById(id) ?: throw NotFoundException()
+
+        val group = GroupEntity.findById(entity.groupId) ?: throw NotFoundException()
+        val discipline = TeacherDisciplineEntity.findById(entity.disciplineId) ?: throw NotFoundException()
+        val audience = AudienceEntity.findById(entity.audienceId) ?: throw NotFoundException()
+        val lessonType = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
+
+        schedule.apply {
+            this.group = group
+            this.discipline = discipline
+            this.audience = audience
+            this.type = lessonType
+            this.day = day
+            this.lessonNumber = lessonNumber
+            this.weekStart = weekStart
+            this.weekEnd = weekEnd
+        }.toDomain()
+    }
+
+    override suspend fun delete(id: UUID) {
+        val schedule = ScheduleEntity.findById(id) ?: throw NotFoundException()
+        schedule.delete()
+    }
+}
