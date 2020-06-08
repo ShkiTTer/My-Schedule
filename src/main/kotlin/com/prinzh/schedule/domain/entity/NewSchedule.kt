@@ -5,7 +5,8 @@ import java.util.*
 
 data class NewSchedule(
     val groupId: UUID,
-    val disciplineId: UUID,
+    val teacherId: UUID,
+    val subjectId: UUID,
     val audienceId: UUID,
     val typeId: UUID,
     val day: Int,

@@ -7,10 +7,11 @@ import com.prinzh.schedule.domain.entity.Schedule
 import com.prinzh.schedule.domain.repository.IScheduleRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
+import org.jetbrains.exposed.sql.and
 import java.util.*
 
 @KtorExperimentalAPI
-class ScheduleRepository: IScheduleRepository {
+class ScheduleRepositoryImpl : IScheduleRepository {
     override suspend fun getAll(): List<Schedule> = dbQuery {
         ScheduleEntity.all().map { it.toDomain() }
     }
@@ -21,9 +22,12 @@ class ScheduleRepository: IScheduleRepository {
 
     override suspend fun create(entity: NewSchedule): Schedule = dbQuery {
         val group = GroupEntity.findById(entity.groupId) ?: throw NotFoundException()
-        val discipline = TeacherDisciplineEntity.findById(entity.disciplineId) ?: throw NotFoundException()
         val audience = AudienceEntity.findById(entity.audienceId) ?: throw NotFoundException()
         val lessonType = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
+
+        val discipline = TeacherDisciplineEntity.find {
+            (TeacherDisciplines.subject eq entity.subjectId) and (TeacherDisciplines.teacher eq entity.teacherId)
+        }.singleOrNull() ?: throw NotFoundException()
 
         ScheduleEntity.new {
             this.group = group
@@ -41,9 +45,12 @@ class ScheduleRepository: IScheduleRepository {
         val schedule = ScheduleEntity.findById(id) ?: throw NotFoundException()
 
         val group = GroupEntity.findById(entity.groupId) ?: throw NotFoundException()
-        val discipline = TeacherDisciplineEntity.findById(entity.disciplineId) ?: throw NotFoundException()
         val audience = AudienceEntity.findById(entity.audienceId) ?: throw NotFoundException()
         val lessonType = LessonTypeEntity.findById(entity.typeId) ?: throw NotFoundException()
+
+        val discipline = TeacherDisciplineEntity.find {
+            (TeacherDisciplines.subject eq entity.subjectId) and (TeacherDisciplines.teacher eq entity.teacherId)
+        }.singleOrNull() ?: throw NotFoundException()
 
         schedule.apply {
             this.group = group
