@@ -52,7 +52,8 @@ val serviceModule = module {
 
     single<IUserService> {
         UserServiceImpl(
-            userRepository = get()
+            userRepository = get(),
+            refreshTokenRepository = get()
         )
     }
 
@@ -76,4 +77,5 @@ val repositoryModule = module {
     singleBy<IRoleRepository, RoleRepositoryImpl>()
     singleBy<IUserRepository, UserRepositoryImpl>()
     singleBy<IScheduleRepository, ScheduleRepositoryImpl>()
+    singleBy<IRefreshTokenRepository, RefreshTokenRepositoryImpl>()
 }

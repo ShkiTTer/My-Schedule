@@ -8,6 +8,7 @@ import com.prinzh.schedule.app.responses.LoginResponse
 import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.domain.entity.NewUser
+import com.prinzh.schedule.domain.repository.IRefreshTokenRepository
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -15,7 +16,10 @@ import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class UserServiceImpl(private val userRepository: IUserRepository) :
+class UserServiceImpl(
+    private val userRepository: IUserRepository,
+    private val refreshTokenRepository: IRefreshTokenRepository
+) :
     IUserService {
     override suspend fun getAll(): List<UserResponse> {
         return userRepository.getAll().map {
@@ -78,6 +82,6 @@ class UserServiceImpl(private val userRepository: IUserRepository) :
     }
 
     override fun login(data: LoginRequest): LoginResponse {
-        TODO("Not yet implemented")
+
     }
 }

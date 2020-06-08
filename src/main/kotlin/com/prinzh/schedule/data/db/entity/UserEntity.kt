@@ -24,6 +24,7 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
     var mail by Users.mail
     var salt by Users.salt
     var roles by RoleEntity via UserRoles
+    val tokens by RefreshTokenEntity referrersOn RefreshTokens.user
 
     override fun toDomain(): User = User(
         id = id.value,
@@ -31,6 +32,7 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
         password = password,
         mail = mail,
         salt = salt,
-        roles = roles.map { it.toDomain() }
+        roles = roles.map { it.toDomain() },
+        tokens = tokens.map { it.toDomain() }
     )
 }
