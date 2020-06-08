@@ -16,5 +16,6 @@ fun Route.api() {
         lessonType()
         teacherDiscipline()
         user()
+        schedule()
     }
 }

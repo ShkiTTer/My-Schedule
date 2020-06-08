@@ -55,6 +55,12 @@ val serviceModule = module {
             userRepository = get()
         )
     }
+
+    single<IScheduleService> {
+        ScheduleServiceImpl(
+            scheduleRepository = get()
+        )
+    }
 }
 
 @KtorExperimentalAPI
@@ -69,4 +75,5 @@ val repositoryModule = module {
     singleBy<ITeacherDisciplineRepository, TeacherDisciplineRepositoryImpl>()
     singleBy<IRoleRepository, RoleRepositoryImpl>()
     singleBy<IUserRepository, UserRepositoryImpl>()
+    singleBy<IScheduleRepository, ScheduleRepositoryImpl>()
 }
