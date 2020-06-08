@@ -1,12 +1,11 @@
 package com.prinzh.schedule.app.route
 
-import com.prinzh.schedule.app.requests.AudienceRequest
+import com.prinzh.schedule.app.requests.LoginRequest
 import com.prinzh.schedule.app.requests.UserRequest
 import com.prinzh.schedule.app.responses.common.DataResponse
 import com.prinzh.schedule.app.responses.common.EmptyResponse
 import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.app.services.interfaces.IUserService
-import com.prinzh.schedule.domain.entity.User
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.request.receive
@@ -77,6 +76,12 @@ fun Route.user() {
 
             service.delete(id)
             call.respond(EmptyResponse(ResponseInfo.OK))
+        }
+
+        post("login") {
+            val data = call.receive<LoginRequest>()
+
+            call.respond(DataResponse(ResponseInfo.OK, service.login(data)))
         }
     }
 }

@@ -31,7 +31,7 @@ object JWTUtil {
         .withArrayClaim("roles", user.roles.map { it.id.toString() }.toTypedArray())
         .sign(algorithm)
 
-    private fun generateRefreshToken(accessToken: String, expired: Date): String {
+    private fun generateRefreshToken(accessToken: String): String {
         val token = (1..REFRESH_LENGTH)
             .map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
@@ -45,7 +45,7 @@ object JWTUtil {
         val expiredRefresh = getExpired(REFRESH_VALIDITY_IN_MS)
 
         val accessToken = generateAccessToken(user, expiredAccess)
-        val refreshToken = generateRefreshToken(accessToken, expiredRefresh)
+        val refreshToken = generateRefreshToken(accessToken)
 
         return TokenInfo(
             accessToken = accessToken,

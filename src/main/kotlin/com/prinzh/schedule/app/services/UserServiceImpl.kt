@@ -2,11 +2,14 @@ package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.common.util.HashUtil
+import com.prinzh.schedule.app.common.util.JWTUtil
 import com.prinzh.schedule.app.requests.LoginRequest
 import com.prinzh.schedule.app.requests.UserRequest
 import com.prinzh.schedule.app.responses.LoginResponse
+import com.prinzh.schedule.app.responses.TokenResponse
 import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
+import com.prinzh.schedule.domain.entity.NewRefreshToken
 import com.prinzh.schedule.domain.entity.NewUser
 import com.prinzh.schedule.domain.repository.IRefreshTokenRepository
 import com.prinzh.schedule.domain.repository.IUserRepository
@@ -21,6 +24,7 @@ class UserServiceImpl(
     private val refreshTokenRepository: IRefreshTokenRepository
 ) :
     IUserService {
+
     override suspend fun getAll(): List<UserResponse> {
         return userRepository.getAll().map {
             UserResponse.fromDomain(it)
@@ -81,7 +85,23 @@ class UserServiceImpl(
         userRepository.delete(id)
     }
 
-    override fun login(data: LoginRequest): LoginResponse {
-        
+    override suspend fun login(data: LoginRequest): LoginResponse {
+        if (data.login.isNullOrEmpty() || data.password.isNullOrEmpty())
+            throw BadRequestException("Invalid credentials")
+
+        val user = userRepository.getByLogin(data.login) ?: throw NotFoundException()
+
+        if (user.password != HashUtil.hash(data.password, user.salt))
+            throw BadRequestException("Invalid password or login")
+
+        val tokenInfo = JWTUtil.newToken(user)
+        refreshTokenRepository.create(
+            NewRefreshToken(token = tokenInfo.refreshToken, expired = tokenInfo.expiredRefresh, userId = user.id)
+        )
+
+        return LoginResponse(
+            user = UserResponse.fromDomain(user),
+            token = TokenResponse.fromDomain(tokenInfo)
+        )
     }
 }
