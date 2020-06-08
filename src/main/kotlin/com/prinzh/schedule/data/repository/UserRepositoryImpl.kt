@@ -92,4 +92,10 @@ class UserRepositoryImpl: IUserRepository {
         val user = UserEntity.findById(id) ?: throw NotFoundException()
         user.delete()
     }
+
+    override suspend fun getByLogin(login: String): User? = dbQuery {
+        UserEntity.find {
+            Users.login eq login
+        }.singleOrNull()?.toDomain()
+    }
 }
