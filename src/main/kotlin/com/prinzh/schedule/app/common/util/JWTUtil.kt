@@ -3,7 +3,7 @@ package com.prinzh.schedule.app.common.util
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import com.prinzh.schedule.app.common.token.Token
+import com.prinzh.schedule.app.common.token.TokenInfo
 import com.prinzh.schedule.domain.entity.User
 import java.util.*
 
@@ -40,14 +40,14 @@ object JWTUtil {
         return token + accessToken.takeLast(REFRESH_ADDITIONAL_LENGTH)
     }
 
-    fun newToken(user: User): Token {
+    fun newToken(user: User): TokenInfo {
         val expiredAccess = getExpired(ACCESS_VALIDITY_IN_MS)
         val expiredRefresh = getExpired(REFRESH_VALIDITY_IN_MS)
 
         val accessToken = generateAccessToken(user, expiredAccess)
         val refreshToken = generateRefreshToken(accessToken, expiredRefresh)
 
-        return Token(
+        return TokenInfo(
             accessToken = accessToken,
             expiredAccess = expiredAccess.time,
             refreshToken = refreshToken,

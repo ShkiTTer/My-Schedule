@@ -1,6 +1,6 @@
 package com.prinzh.schedule.app.common.token
 
-data class Token(
+data class TokenInfo(
     val accessToken: String,
     val expiredAccess: Long,
     val refreshToken: String,

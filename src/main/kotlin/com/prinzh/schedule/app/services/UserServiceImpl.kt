@@ -2,11 +2,12 @@ package com.prinzh.schedule.app.services
 
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.common.util.HashUtil
+import com.prinzh.schedule.app.requests.LoginRequest
 import com.prinzh.schedule.app.requests.UserRequest
+import com.prinzh.schedule.app.responses.LoginResponse
 import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.domain.entity.NewUser
-import com.prinzh.schedule.domain.repository.IRoleRepository
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -74,5 +75,9 @@ class UserServiceImpl(private val userRepository: IUserRepository) :
 
     override suspend fun delete(id: UUID) {
         userRepository.delete(id)
+    }
+
+    override fun login(data: LoginRequest): LoginResponse {
+        TODO("Not yet implemented")
     }
 }
