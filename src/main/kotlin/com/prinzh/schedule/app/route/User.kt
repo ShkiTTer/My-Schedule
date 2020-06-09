@@ -77,11 +77,5 @@ fun Route.user() {
             service.delete(id)
             call.respond(EmptyResponse(ResponseInfo.OK))
         }
-
-        post("login") {
-            val data = call.receive<LoginRequest>()
-
-            call.respond(DataResponse(ResponseInfo.OK, service.login(data)))
-        }
     }
 }

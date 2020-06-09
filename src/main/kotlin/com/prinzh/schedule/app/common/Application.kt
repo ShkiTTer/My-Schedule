@@ -4,7 +4,6 @@ import com.google.gson.GsonBuilder
 import com.prinzh.schedule.app.common.exception.ForbiddenException
 import com.prinzh.schedule.app.common.exception.UnauthorizedException
 import com.prinzh.schedule.app.common.extension.toUUID
-import com.prinzh.schedule.app.common.extension.toUserRole
 import com.prinzh.schedule.app.common.util.JWTUtil
 import com.prinzh.schedule.app.di.repositoryModule
 import com.prinzh.schedule.app.di.serviceModule
@@ -17,7 +16,6 @@ import com.prinzh.schedule.domain.entity.UserRole
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.ForbiddenResponse
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.*
 import io.ktor.gson.GsonConverter
@@ -82,7 +80,7 @@ suspend fun main(args: Array<String>) {
                         ?.map { s -> s.toUUID() }
                         ?: throw ForbiddenException()
 
-                    UserCredentials(userId, userRoles)
+                    UserPrincipal(userId, userRoles)
                 }
             }
         }

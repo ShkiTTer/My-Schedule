@@ -17,5 +17,6 @@ fun Route.api() {
         teacherDiscipline()
         user()
         schedule()
+        auth()
     }
 }

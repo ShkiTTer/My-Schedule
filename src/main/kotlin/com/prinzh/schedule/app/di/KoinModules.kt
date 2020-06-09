@@ -62,6 +62,13 @@ val serviceModule = module {
             scheduleRepository = get()
         )
     }
+
+    single<IAuthService> {
+        AuthServiceImpl(
+            userRepository = get(),
+            refreshTokenRepository = get()
+        )
+    }
 }
 
 @KtorExperimentalAPI
