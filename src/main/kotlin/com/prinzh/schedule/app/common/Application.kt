@@ -2,6 +2,7 @@ package com.prinzh.schedule.app.common
 
 import com.google.gson.GsonBuilder
 import com.prinzh.schedule.app.common.exception.ForbiddenException
+import com.prinzh.schedule.app.common.exception.UnauthorizedException
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.common.extension.toUserRole
 import com.prinzh.schedule.app.common.util.JWTUtil
@@ -104,6 +105,10 @@ suspend fun main(args: Array<String>) {
 
             exception<ForbiddenException> {
                 call.respond(EmptyResponse(ResponseInfo.FORBIDDEN))
+            }
+
+            exception<UnauthorizedException> {
+                call.respond(EmptyResponse(ResponseInfo.UNAUTHORIZED))
             }
         }
 
