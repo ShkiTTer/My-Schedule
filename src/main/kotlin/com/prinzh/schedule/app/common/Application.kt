@@ -34,6 +34,7 @@ import org.koin.ktor.ext.inject
 import org.koin.ktor.ext.installKoin
 import org.slf4j.event.Level
 import java.text.DateFormat
+import java.util.*
 
 @KtorExperimentalAPI
 suspend fun main(args: Array<String>) {
@@ -72,15 +73,17 @@ suspend fun main(args: Array<String>) {
                 verifier(JWTUtil.verifier)
 
                 validate {
-                    val userService by inject<IUserService>()
+                    val userId: UUID
+                    val userRole: UUID
 
-                    val userId = it.payload.claims["id"]?.asString().toUUID()
-                    val userRoles = it.payload.claims["roles"]
-                        ?.asList(String::class.java)
-                        ?.map { s -> s.toUUID() }
-                        ?: throw ForbiddenException()
+                    try {
+                        userId = it.payload.claims["id"]?.asString().toUUID()
+                        userRole = it.payload.claims["role"]?.asString().toUUID()
+                    } catch (e: Exception) {
+                        throw UnauthorizedException()
+                    }
 
-                    UserPrincipal(userId, userRoles)
+                    UserPrincipal(userId, userRole)
                 }
             }
         }

@@ -43,7 +43,7 @@ class UserServiceImpl(
 
     override suspend fun create(data: UserRequest): UserResponse {
         if (data.login.isNullOrEmpty() || data.password.isNullOrEmpty()
-            || data.mail.isNullOrEmpty() || data.roles.isNullOrEmpty()
+            || data.mail.isNullOrEmpty() || data.role.isNullOrEmpty()
         ) {
             throw BadRequestException("Invalid credentials")
         }
@@ -56,7 +56,7 @@ class UserServiceImpl(
                 password = HashUtil.hash(data.password, salt),
                 mail = data.mail,
                 salt = salt,
-                roles = data.roles.map { it.toUUID() }
+                role = data.role.toUUID()
             )
         ).let {
             UserResponse.fromDomain(it)
@@ -65,7 +65,7 @@ class UserServiceImpl(
 
     override suspend fun update(id: UUID, data: UserRequest): UserResponse {
         if (data.login.isNullOrEmpty() || data.password.isNullOrEmpty()
-            || data.mail.isNullOrEmpty() || data.roles.isNullOrEmpty()
+            || data.mail.isNullOrEmpty() || data.role.isNullOrEmpty()
         ) {
             throw BadRequestException("Invalid credentials")
         }
@@ -78,7 +78,7 @@ class UserServiceImpl(
                 password = HashUtil.hash(data.password, salt),
                 mail = data.mail,
                 salt = salt,
-                roles = data.roles.map { it.toUUID() }
+                role = data.role.toUUID()
             )
         ).let {
             UserResponse.fromDomain(it)

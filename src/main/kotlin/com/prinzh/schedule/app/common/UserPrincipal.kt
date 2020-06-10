@@ -5,5 +5,5 @@ import java.util.*
 
 data class UserPrincipal(
     val id: UUID,
-    val roles: List<UUID>
+    val role: UUID
 ) : Principal

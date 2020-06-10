@@ -23,68 +23,27 @@ class UserRepositoryImpl: IUserRepository {
     }
 
     override suspend fun create(entity: NewUser): User = dbQuery {
-        val roles = mutableListOf<RoleEntity>()
+        val role = RoleEntity.findById(entity.role) ?: throw NotFoundException()
 
-        entity.roles.forEach {
-            roles.add(RoleEntity.findById(it) ?: throw NotFoundException())
-        }
-
-        val user = UserEntity.new {
-            login = entity.login
-            password = entity.password
-            mail = entity.mail
-            salt = entity.salt
-        }
-
-        roles.forEach {
-            UserRoleEntity.new {
-                this.user = user
-                role = it
-            }
-        }
-
-        user.toDomain()
+        UserEntity.new {
+            this.login = entity.login
+            this.password = entity.password
+            this.mail = entity.mail
+            this.salt = entity.salt
+            this.role = role
+        }.toDomain()
     }
 
     override suspend fun update(id: UUID, entity: NewUser): User = dbQuery {
         val user = UserEntity.findById(id) ?: throw NotFoundException()
-        val roles = mutableListOf<RoleEntity>()
-        val deleteRoles = mutableListOf<RoleEntity>()
-        val addRoles = mutableListOf<RoleEntity>()
-
-        entity.roles.forEach {
-            val role = RoleEntity.findById(it) ?: throw NotFoundException()
-            roles.add(role)
-
-            if (!user.roles.contains(role)) {
-                addRoles.add(role)
-            }
-        }
-
-        user.roles.forEach {
-            if (!roles.contains(it)) {
-                deleteRoles.add(it)
-            }
-        }
-
-        deleteRoles.forEach {
-            UserRoleEntity.find {
-                (UserRoles.role eq it.id) and (UserRoles.user eq user.id)
-            }.single().delete()
-        }
-
-        addRoles.forEach {
-            UserRoleEntity.new {
-                this.user = user
-                this.role = it
-            }
-        }
+        val role = RoleEntity.findById(entity.role) ?: throw NotFoundException()
 
         user.apply {
-            login = entity.login
-            password = entity.password
-            mail = entity.mail
-            salt = entity.salt
+            this.login = entity.login
+            this.password = entity.password
+            this.mail = entity.mail
+            this.salt = entity.salt
+            this.role = role
         }.toDomain()
     }
 

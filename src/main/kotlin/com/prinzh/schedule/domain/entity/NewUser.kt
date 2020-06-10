@@ -8,5 +8,5 @@ data class NewUser(
     val password: String,
     val mail: String,
     val salt: ByteArray,
-    val roles: List<UUID>
-): INewEntity
+    val role: UUID
+) : INewEntity

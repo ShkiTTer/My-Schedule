@@ -9,14 +9,14 @@ data class UserResponse(
     val id: UUID,
     val login: String,
     val mail: String,
-    val roles: List<RoleResponse>
+    val role: RoleResponse
 ) : IResponseContent {
     companion object : IResponseConverter<User, UserResponse> {
         override fun fromDomain(data: User): UserResponse = UserResponse(
-            data.id!!,
+            data.id,
             data.login,
             data.mail,
-            data.roles.map { RoleResponse.fromDomain(it) }
+            RoleResponse.fromDomain(data.role)
         )
     }
 }
