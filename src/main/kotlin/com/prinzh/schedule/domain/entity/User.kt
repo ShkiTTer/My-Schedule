@@ -9,6 +9,6 @@ data class User(
     val password: String,
     val mail: String,
     val salt: ByteArray,
-    val roles: List<Role>,
+    val role: Role,
     val tokens: List<RefreshToken>
 ): IDataEntity

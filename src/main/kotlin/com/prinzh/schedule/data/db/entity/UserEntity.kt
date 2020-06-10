@@ -14,6 +14,7 @@ object Users : UUIDTable(name = "user") {
     val password = varchar("password", 255)
     val mail = varchar("mail", 150).uniqueIndex()
     val salt = binary("salt", 16)
+    val role = reference("role", Roles)
 }
 
 class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
@@ -23,7 +24,7 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
     var password by Users.password
     var mail by Users.mail
     var salt by Users.salt
-    var roles by RoleEntity via UserRoles
+    var role by RoleEntity referencedOn Users.role
     val tokens by RefreshTokenEntity referrersOn RefreshTokens.user
 
     override fun toDomain(): User = User(
@@ -32,7 +33,7 @@ class UserEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<User> {
         password = password,
         mail = mail,
         salt = salt,
-        roles = roles.map { it.toDomain() },
+        role = role.toDomain(),
         tokens = tokens.map { it.toDomain() }
     )
 }

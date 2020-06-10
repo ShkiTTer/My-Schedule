@@ -17,7 +17,7 @@ class RoleEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<Role> {
     companion object: UUIDEntityClass<RoleEntity>(Roles)
 
     var role by Roles.role
-    var users by UserEntity via UserRoles
+    val users by UserEntity referrersOn Users.role
 
     override fun toDomain(): Role = Role(id.value, role)
 }
