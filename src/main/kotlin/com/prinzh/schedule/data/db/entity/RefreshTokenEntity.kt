@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.ReferenceOption
 import java.util.*
 
 object RefreshTokens: UUIDTable("refresh_token") {
-    val token = varchar("token", 24)
+    val token = varchar("token", 64)
     val expired = long("expired")
     val user = reference("user", Users, ReferenceOption.CASCADE)
 }
