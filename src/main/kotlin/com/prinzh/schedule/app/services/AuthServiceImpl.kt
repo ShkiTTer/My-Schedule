@@ -49,14 +49,6 @@ class AuthServiceImpl(
 
         val user = userRepository.getById(userId) ?: throw NotFoundException()
 
-        if (!JWTUtil.validateRefreshToken(data.accessToken, data.refreshToken)) {
-            user.tokens.forEach {
-                refreshTokenRepository.delete(it.id)
-            }
-
-            throw UnauthorizedException()
-        }
-
         val refreshToken = user.tokens.find {
             it.token == data.refreshToken
         } ?: throw NotFoundException()

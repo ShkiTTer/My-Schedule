@@ -12,6 +12,8 @@ import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.app.route.api
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.data.db.common.DatabaseFactory
+import com.prinzh.schedule.domain.entity.Role
+import com.prinzh.schedule.domain.entity.User
 import com.prinzh.schedule.domain.entity.UserRole
 import io.ktor.application.call
 import io.ktor.application.install
