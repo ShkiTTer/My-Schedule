@@ -64,7 +64,7 @@ class ScheduleRepositoryImpl : IScheduleRepository {
         }.toDomain()
     }
 
-    override suspend fun delete(id: UUID) {
+    override suspend fun delete(id: UUID) = dbQuery {
         val schedule = ScheduleEntity.findById(id) ?: throw NotFoundException()
         schedule.delete()
     }
