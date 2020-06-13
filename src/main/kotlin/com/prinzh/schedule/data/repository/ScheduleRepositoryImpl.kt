@@ -34,10 +34,10 @@ class ScheduleRepositoryImpl : IScheduleRepository {
             this.discipline = discipline
             this.audience = audience
             this.type = lessonType
-            this.day = day
-            this.lessonNumber = lessonNumber
-            this.weekStart = weekStart
-            this.weekEnd = weekEnd
+            this.day = entity.day
+            this.lessonNumber = entity.lessonNumber
+            this.weekStart = entity.weekStart
+            this.weekEnd = entity.weekEnd
         }.toDomain()
     }
 
@@ -57,10 +57,10 @@ class ScheduleRepositoryImpl : IScheduleRepository {
             this.discipline = discipline
             this.audience = audience
             this.type = lessonType
-            this.day = day
-            this.lessonNumber = lessonNumber
-            this.weekStart = weekStart
-            this.weekEnd = weekEnd
+            this.day = entity.day
+            this.lessonNumber = entity.lessonNumber
+            this.weekStart = entity.weekStart
+            this.weekEnd = entity.weekEnd
         }.toDomain()
     }
 
