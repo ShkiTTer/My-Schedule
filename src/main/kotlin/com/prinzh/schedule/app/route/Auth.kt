@@ -30,7 +30,7 @@ fun Route.auth() {
             call.respond(DataResponse(ResponseInfo.OK, service.login(data)))
         }
 
-        authenticate(UserRole.DEANERY.name) {
+        authenticate {
             post("token") {
                 val data = call.receive<TokenRequest>()
                 val userId = call.principal<UserPrincipal>()?.id ?: throw UnauthorizedException()
