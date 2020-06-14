@@ -48,19 +48,19 @@ class TeacherRepositoryImpl : ITeacherRepository {
 
     override suspend fun getBySurname(surname: String): List<Teacher> = dbQuery {
         TeacherEntity.find {
-            Teachers.surname.lowerCase() regexp surname.toRegexStringQuery()
+            Teachers.surname.lowerCase() like surname.toRegexStringQuery()
         }.map { it.toDomain() }
     }
 
     override suspend fun getByName(name: String): List<Teacher> = dbQuery {
         TeacherEntity.find {
-            Teachers.name.lowerCase() regexp name.toRegexStringQuery()
+            Teachers.name.lowerCase() like name.toRegexStringQuery()
         }.map { it.toDomain() }
     }
 
     override suspend fun getByPatronymic(patronymic: String): List<Teacher> = dbQuery {
         TeacherEntity.find {
-            Teachers.patronymic.lowerCase() regexp patronymic.toRegexStringQuery()
+            Teachers.patronymic.lowerCase() like patronymic.toRegexStringQuery()
         }.map { it.toDomain() }
     }
 }

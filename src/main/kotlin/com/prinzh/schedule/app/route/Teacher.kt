@@ -43,6 +43,12 @@ fun Route.teacher() {
             )
         }
 
+        get("search") {
+            val query = call.request.queryParameters["query"]
+
+            call.respond(DataResponse(ResponseInfo.OK, service.search(query)))
+        }
+
         post {
             val data = call.receive<TeacherRequest>()
 

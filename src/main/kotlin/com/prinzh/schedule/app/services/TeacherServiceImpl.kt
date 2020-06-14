@@ -57,4 +57,14 @@ class TeacherServiceImpl(private val repository: ITeacherRepository) : ITeacherS
     override suspend fun delete(id: UUID) {
         repository.delete(id)
     }
+
+    override suspend fun search(query: String?): List<TeacherResponse> {
+        if (query.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
+
+        val result = (repository.getBySurname(query).toSet()
+                + repository.getByName(query).toSet()
+                + repository.getByPatronymic(query).toSet())
+
+        return result.map { TeacherResponse.fromDomain(it) }
+    }
 }
