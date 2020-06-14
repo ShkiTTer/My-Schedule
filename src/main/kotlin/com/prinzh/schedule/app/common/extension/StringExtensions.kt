@@ -14,7 +14,7 @@ fun String?.toUUID(): UUID = try {
 
 @KtorExperimentalAPI
 fun String?.toUserRole(): UserRole = try {
-    UserRole.valueOf(this ?: throw BadRequestException("Invalid credentials") )
+    UserRole.valueOf(this ?: throw BadRequestException("Invalid credentials"))
 } catch (t: Throwable) {
     throw BadRequestException("Invalid credentials")
 }
@@ -31,3 +31,6 @@ fun String.toColor(): String {
 
     return color
 }
+
+@KtorExperimentalAPI
+fun String.toRegexStringQuery(): String = "%${this.toLowerCase()}%"
