@@ -20,12 +20,19 @@ fun Route.schedule() {
 
     route("schedule") {
         get {
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.getAll()
-                )
-            )
+            val queryParam = call.request.queryParameters["id"]
+
+            if (queryParam == null) {
+                call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            } else {
+                val id = try {
+                    UUID.fromString(queryParam)
+                } catch (e: Exception) {
+                    throw BadRequestException("Invalid credentials")
+                }
+
+                call.respond(DataResponse(ResponseInfo.OK, service.getById(id)))
+            }
         }
 
         get("{id}") {
@@ -56,7 +63,7 @@ fun Route.schedule() {
 
         put {
             val id = try {
-                UUID.fromString(call.parameters["id"])
+                UUID.fromString(call.request.queryParameters["id"])
             } catch (e: Exception) {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
@@ -73,7 +80,7 @@ fun Route.schedule() {
 
         delete {
             val id = try {
-                UUID.fromString(call.parameters["id"])
+                UUID.fromString(call.request.queryParameters["id"])
             } catch (e: Exception) {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
