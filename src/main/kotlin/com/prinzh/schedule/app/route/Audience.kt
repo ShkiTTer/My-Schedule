@@ -23,7 +23,7 @@ fun Route.audience() {
         get {
             val queryParam = call.request.queryParameters["id"]
 
-            if (queryParam.isNullOrEmpty()) {
+            if (queryParam == null) {
                 call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
             } else {
                 val id = try {
