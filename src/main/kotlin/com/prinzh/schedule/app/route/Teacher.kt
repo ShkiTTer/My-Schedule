@@ -20,18 +20,18 @@ fun Route.teacher() {
 
     route("teacher") {
         get {
-            val id = call.request.queryParameters["id"]
+            val queryParam = call.request.queryParameters["id"]
 
-            if (id.isNullOrEmpty()) {
+            if (queryParam.isNullOrEmpty()) {
                 call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
             } else {
-                val userId = try {
-                    UUID.fromString(id)
+                val id = try {
+                    UUID.fromString(queryParam)
                 } catch (e: Exception) {
                     throw BadRequestException("Invalid credentials")
                 }
 
-                call.respond(DataResponse(ResponseInfo.OK, service.getById(userId)))
+                call.respond(DataResponse(ResponseInfo.OK, service.getById(id)))
             }
         }
 
