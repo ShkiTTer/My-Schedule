@@ -7,5 +7,6 @@ data class Teacher(
     val id: UUID,
     val surname: String,
     val name: String,
-    val patronymic: String
+    val patronymic: String,
+    val subjects: List<Subject>
 ): IDataEntity

@@ -8,18 +8,25 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
-object Teachers: UUIDTable("teacher") {
+object Teachers : UUIDTable("teacher") {
     val surname = varchar("surname", 50)
     val name = varchar("name", 50)
     val patronymic = varchar("patronymic", 50)
 }
 
-class TeacherEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<Teacher> {
-    companion object: UUIDEntityClass<TeacherEntity>(Teachers)
+class TeacherEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<Teacher> {
+    companion object : UUIDEntityClass<TeacherEntity>(Teachers)
 
     var surname by Teachers.surname
     var name by Teachers.name
     var patronymic by Teachers.patronymic
+    val subjects by SubjectEntity via TeacherDisciplines
 
-    override fun toDomain(): Teacher = Teacher(id.value, surname, name, patronymic)
+    override fun toDomain(): Teacher = Teacher(
+        id.value,
+        surname,
+        name,
+        patronymic,
+        subjects.map { it.toDomain() }
+    )
 }
