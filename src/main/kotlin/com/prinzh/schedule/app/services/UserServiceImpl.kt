@@ -14,6 +14,7 @@ import com.prinzh.schedule.app.responses.common.IResponseContent
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.domain.entity.NewRefreshToken
 import com.prinzh.schedule.domain.entity.NewUser
+import com.prinzh.schedule.domain.entity.User
 import com.prinzh.schedule.domain.repository.IRefreshTokenRepository
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.BadRequestException
@@ -87,5 +88,11 @@ class UserServiceImpl(
 
     override suspend fun delete(id: UUID) {
         userRepository.delete(id)
+    }
+
+    override suspend fun checkUser(userId: UUID, roleId: UUID): User? {
+        val user = userRepository.getById(userId) ?: return null
+
+        return if (user.role.id == roleId) user else null
     }
 }

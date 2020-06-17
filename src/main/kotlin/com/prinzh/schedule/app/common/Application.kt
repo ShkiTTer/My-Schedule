@@ -12,8 +12,6 @@ import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.app.route.api
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.data.db.common.DatabaseFactory
-import com.prinzh.schedule.domain.entity.Role
-import com.prinzh.schedule.domain.entity.User
 import com.prinzh.schedule.domain.entity.UserRole
 import io.ktor.application.call
 import io.ktor.application.install
@@ -71,21 +69,49 @@ suspend fun main(args: Array<String>) {
         }
 
         install(Authentication) {
-            jwt(UserRole.DEANERY.name) {
+            jwt {
+                val service by inject<IUserService>()
                 verifier(JWTUtil.verifier)
 
                 validate {
                     val userId: UUID
-                    val userRole: UUID
+                    val roleId: UUID
 
                     try {
                         userId = it.payload.claims["id"]?.asString().toUUID()
-                        userRole = it.payload.claims["role"]?.asString().toUUID()
+                        roleId = it.payload.claims["role"]?.asString().toUUID()
                     } catch (e: Exception) {
                         throw UnauthorizedException()
                     }
 
-                    UserPrincipal(userId, userRole)
+                    val user = service.checkUser(userId, roleId) ?: throw UnauthorizedException()
+
+                    if (user.role.role == UserRole.DEANERY || user.role.role == UserRole.ADMIN)
+                        UserPrincipal(userId, roleId)
+                    else null
+                }
+            }
+
+            jwt(UserRole.ADMIN.name) {
+                val service by inject<IUserService>()
+                verifier(JWTUtil.verifier)
+
+                validate {
+                    val userId: UUID
+                    val roleId: UUID
+
+                    try {
+                        userId = it.payload.claims["id"]?.asString().toUUID()
+                        roleId = it.payload.claims["role"]?.asString().toUUID()
+                    } catch (e: Exception) {
+                        throw UnauthorizedException()
+                    }
+
+                    val user = service.checkUser(userId, roleId) ?: throw UnauthorizedException()
+
+                    if (user.role.role == UserRole.ADMIN)
+                        UserPrincipal(userId, roleId)
+                    else null
                 }
             }
         }
