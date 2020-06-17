@@ -2,6 +2,7 @@ package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.app.common.extension.toRegexStringQuery
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
+import com.prinzh.schedule.data.db.entity.SubjectEntity
 import com.prinzh.schedule.data.db.entity.TeacherEntity
 import com.prinzh.schedule.data.db.entity.Teachers
 import com.prinzh.schedule.domain.entity.NewTeacher
@@ -62,5 +63,13 @@ class TeacherRepositoryImpl : ITeacherRepository {
         TeacherEntity.find {
             Teachers.patronymic.lowerCase() like patronymic.toRegexStringQuery()
         }.map { it.toDomain() }
+    }
+
+    override suspend fun getBySubject(subjectId: UUID): List<Teacher> = dbQuery {
+        val subject = SubjectEntity.findById(subjectId) ?: throw NotFoundException()
+
+        subject.teachers.map {
+            it.toDomain()
+        }
     }
 }
