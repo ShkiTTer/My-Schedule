@@ -69,6 +69,12 @@ val serviceModule = module {
             refreshTokenRepository = get()
         )
     }
+
+    single<IRoleService> {
+        RoleServiceImpl(
+            roleRepository = get()
+        )
+    }
 }
 
 @KtorExperimentalAPI
