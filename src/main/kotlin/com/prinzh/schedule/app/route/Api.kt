@@ -18,5 +18,6 @@ fun Route.api() {
         user()
         schedule()
         auth()
+        role()
     }
 }
