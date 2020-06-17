@@ -18,7 +18,22 @@ fun Route.teacher() {
 
     route("teacher") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            val subjectParam = call.request.queryParameters["subject"]
+            val searchParam = call.request.queryParameters["search"]
+
+            when {
+                subjectParam != null -> {
+                    call.respond(DataResponse(ResponseInfo.OK, service.getBySubject(subjectParam.toUUID())))
+                }
+
+                searchParam != null -> {
+                    call.respond(DataResponse(ResponseInfo.OK, service.search(searchParam)))
+                }
+
+                else -> {
+                    call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+                }
+            }
         }
 
         get("{id}") {
