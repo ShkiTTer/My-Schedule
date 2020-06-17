@@ -21,12 +21,6 @@ fun Route.faculty() {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }
 
-        get("{id}") {
-            val id = call.parameters["id"]
-
-            call.respond(DataResponse(ResponseInfo.OK, service.getById(id.toUUID())))
-        }
-
         post {
             val data = call.receive<FacultyRequest>()
 
@@ -38,27 +32,35 @@ fun Route.faculty() {
             )
         }
 
-        put {
-            val id = call.parameters["id"]
-            val data = call.receive<FacultyRequest>()
+        route("{id}") {
+            get {
+                val id = call.parameters["id"]
 
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.update(id.toUUID(), data)
+                call.respond(DataResponse(ResponseInfo.OK, service.getById(id.toUUID())))
+            }
+
+            put {
+                val id = call.parameters["id"]
+                val data = call.receive<FacultyRequest>()
+
+                call.respond(
+                    DataResponse(
+                        ResponseInfo.OK,
+                        service.update(id.toUUID(), data)
+                    )
                 )
-            )
-        }
+            }
 
-        delete {
-            val id = call.parameters["id"]
+            delete {
+                val id = call.parameters["id"]
 
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.delete(id.toUUID())
+                call.respond(
+                    DataResponse(
+                        ResponseInfo.OK,
+                        service.delete(id.toUUID())
+                    )
                 )
-            )
+            }
         }
     }
 }
