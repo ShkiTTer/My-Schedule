@@ -5,4 +5,5 @@ import com.prinzh.schedule.domain.entity.Subject
 import java.util.*
 
 interface ISubjectRepository: ICrudRepository<NewSubject, Subject, UUID> {
+    suspend fun getByTeacher(teacherId: UUID): List<Subject>
 }

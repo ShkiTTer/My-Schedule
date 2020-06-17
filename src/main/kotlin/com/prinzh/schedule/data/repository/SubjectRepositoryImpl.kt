@@ -2,6 +2,7 @@ package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
 import com.prinzh.schedule.data.db.entity.SubjectEntity
+import com.prinzh.schedule.data.db.entity.TeacherEntity
 import com.prinzh.schedule.domain.entity.NewSubject
 import com.prinzh.schedule.domain.entity.Subject
 import com.prinzh.schedule.domain.repository.ISubjectRepository
@@ -37,5 +38,13 @@ class SubjectRepositoryImpl: ISubjectRepository {
         val subject = SubjectEntity.findById(id) ?: throw NotFoundException()
 
         subject.delete()
+    }
+
+    override suspend fun getByTeacher(teacherId: UUID): List<Subject> = dbQuery {
+        val teacher = TeacherEntity.findById(teacherId) ?: throw NotFoundException()
+
+        teacher.subjects.map {
+            it.toDomain()
+        }
     }
 }
