@@ -20,18 +20,32 @@ fun Route.subject() {
 
     route("subject") {
         get {
-            val queryParam = call.request.queryParameters["id"]
+            val queryIdParam = call.request.queryParameters["id"]
+            val queryTeacherIdParam = call.request.queryParameters["teacher"]
 
-            if (queryParam == null) {
-                call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
-            } else {
-                val id = try {
-                    UUID.fromString(queryParam)
-                } catch (e: Exception) {
-                    throw BadRequestException("Invalid credentials")
+            when {
+                queryIdParam != null -> {
+                    val id = try {
+                        UUID.fromString(queryIdParam)
+                    } catch (e: Exception) {
+                        throw BadRequestException("Invalid credentials")
+                    }
+
+                    call.respond(DataResponse(ResponseInfo.OK, service.getById(id)))
+
                 }
+                queryTeacherIdParam != null -> {
+                    val teacherId = try {
+                        UUID.fromString(queryTeacherIdParam)
+                    } catch (e: Exception) {
+                        throw BadRequestException("Invalid credentials")
+                    }
 
-                call.respond(DataResponse(ResponseInfo.OK, service.getById(id)))
+                    call.respond(DataResponse(ResponseInfo.OK, service.getByTeacher(teacherId)))
+                }
+                else -> {
+                    call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+                }
             }
         }
 
