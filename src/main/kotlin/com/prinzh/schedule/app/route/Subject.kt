@@ -27,12 +27,6 @@ fun Route.subject() {
             }
         }
 
-        get("{id}") {
-            val id = call.parameters["id"]
-
-            call.respond(DataResponse(ResponseInfo.OK, service.getById(id.toUUID())))
-        }
-
         post {
             val data = call.receive<SubjectRequest>()
 
@@ -44,27 +38,35 @@ fun Route.subject() {
             )
         }
 
-        put {
-            val id = call.parameters["id"]
-            val data = call.receive<SubjectRequest>()
+        route("{id}") {
+            get {
+                val id = call.parameters["id"]
 
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.update(id.toUUID(), data)
+                call.respond(DataResponse(ResponseInfo.OK, service.getById(id.toUUID())))
+            }
+
+            put {
+                val id = call.parameters["id"]
+                val data = call.receive<SubjectRequest>()
+
+                call.respond(
+                    DataResponse(
+                        ResponseInfo.OK,
+                        service.update(id.toUUID(), data)
+                    )
                 )
-            )
-        }
+            }
 
-        delete {
-            val id = call.parameters["id"]
+            delete {
+                val id = call.parameters["id"]
 
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.delete(id.toUUID())
+                call.respond(
+                    DataResponse(
+                        ResponseInfo.OK,
+                        service.delete(id.toUUID())
+                    )
                 )
-            )
+            }
         }
     }
 }
