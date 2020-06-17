@@ -1,6 +1,5 @@
 package com.prinzh.schedule.app.route
 
-import com.prinzh.schedule.app.requests.LoginRequest
 import com.prinzh.schedule.app.requests.UserRequest
 import com.prinzh.schedule.app.responses.common.DataResponse
 import com.prinzh.schedule.app.responses.common.EmptyResponse
@@ -21,22 +20,19 @@ fun Route.user() {
 
     route("user") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
-        }
+            val queryParam = call.request.queryParameters["id"]
 
-        get("{id}") {
-            val id = try {
-                UUID.fromString(call.parameters["id"])
-            } catch (e: Exception) {
-                throw BadRequestException("Invalid credentials")
-            } ?: throw BadRequestException("Invalid credentials")
+            if (queryParam == null) {
+                call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            } else {
+                val id = try {
+                    UUID.fromString(queryParam)
+                } catch (e: Exception) {
+                    throw BadRequestException("Invalid credentials")
+                }
 
-            call.respond(
-                DataResponse(
-                    ResponseInfo.OK,
-                    service.getById(id)
-                )
-            )
+                call.respond(DataResponse(ResponseInfo.OK, service.getById(id)))
+            }
         }
 
         post {
@@ -52,7 +48,7 @@ fun Route.user() {
 
         put {
             val id = try {
-                UUID.fromString(call.parameters["id"])
+                UUID.fromString(call.request.queryParameters["id"])
             } catch (e: Exception) {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
@@ -69,7 +65,7 @@ fun Route.user() {
 
         delete {
             val id = try {
-                UUID.fromString(call.parameters["id"])
+                UUID.fromString(call.request.queryParameters["id"])
             } catch (e: Exception) {
                 throw BadRequestException("Invalid credentials")
             } ?: throw BadRequestException("Invalid credentials")
