@@ -13,7 +13,7 @@ data class TeacherResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Teacher, TeacherResponse> {
         override fun fromDomain(data: Teacher): TeacherResponse = TeacherResponse(
-            data.id!!,
+            data.id,
             data.surname,
             data.name,
             data.patronymic

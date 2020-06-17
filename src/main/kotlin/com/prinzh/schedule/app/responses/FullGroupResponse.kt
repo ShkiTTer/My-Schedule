@@ -13,7 +13,7 @@ data class FullGroupResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Group, FullGroupResponse> {
         override fun fromDomain(data: Group): FullGroupResponse = FullGroupResponse(
-            data.id!!,
+            data.id,
             data.title,
             FacultyResponse.fromDomain(data.faculty),
             data.parentGroup?.let {

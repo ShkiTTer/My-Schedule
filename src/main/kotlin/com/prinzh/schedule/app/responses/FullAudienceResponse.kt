@@ -12,7 +12,7 @@ data class FullAudienceResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Audience, FullAudienceResponse> {
         override fun fromDomain(data: Audience): FullAudienceResponse = FullAudienceResponse(
-            data.id!!,
+            data.id,
             data.audienceNumber,
             BuildingResponse.fromDomain(data.building)
         )

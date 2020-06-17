@@ -12,7 +12,7 @@ data class ShortGroupResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Group, ShortGroupResponse> {
         override fun fromDomain(data: Group): ShortGroupResponse = ShortGroupResponse(
-            data.id!!,
+            data.id,
             data.title,
             FacultyResponse.fromDomain(data.faculty)
         )

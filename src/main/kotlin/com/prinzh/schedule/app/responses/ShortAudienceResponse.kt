@@ -11,7 +11,7 @@ data class ShortAudienceResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Audience, ShortAudienceResponse> {
         override fun fromDomain(data: Audience): ShortAudienceResponse = ShortAudienceResponse(
-            data.id!!,
+            data.id,
             data.audienceNumber
         )
     }

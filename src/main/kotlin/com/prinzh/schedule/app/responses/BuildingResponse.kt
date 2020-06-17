@@ -13,7 +13,7 @@ data class BuildingResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Building, BuildingResponse> {
         override fun fromDomain(data: Building): BuildingResponse = BuildingResponse(
-            data.id!!,
+            data.id,
             data.title,
             data.address
         )
