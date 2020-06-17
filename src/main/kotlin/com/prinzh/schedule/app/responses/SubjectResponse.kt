@@ -11,7 +11,7 @@ data class SubjectResponse(
 ) : IResponseContent {
     companion object : IResponseConverter<Subject, SubjectResponse> {
         override fun fromDomain(data: Subject): SubjectResponse = SubjectResponse(
-            data.id!!,
+            data.id,
             data.title
         )
     }

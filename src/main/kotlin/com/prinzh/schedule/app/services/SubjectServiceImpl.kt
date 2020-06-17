@@ -43,4 +43,10 @@ class SubjectServiceImpl(private val repository: ISubjectRepository) : ISubjectS
     override suspend fun delete(id: UUID) {
         repository.delete(id)
     }
+
+    override suspend fun getByTeacher(teacherId: UUID): List<SubjectResponse> {
+        return repository.getByTeacher(teacherId).map {
+            SubjectResponse.fromDomain(it)
+        }
+    }
 }
