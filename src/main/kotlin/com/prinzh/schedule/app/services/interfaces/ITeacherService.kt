@@ -6,4 +6,5 @@ import java.util.*
 
 interface ITeacherService : ICrudService<TeacherRequest, UUID> {
     suspend fun search(query: String?): List<TeacherResponse>
+    suspend fun getBySubject(subjectId: UUID): List<TeacherResponse>
 }

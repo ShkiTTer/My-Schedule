@@ -67,4 +67,10 @@ class TeacherServiceImpl(private val repository: ITeacherRepository) : ITeacherS
 
         return result.map { TeacherResponse.fromDomain(it) }
     }
+
+    override suspend fun getBySubject(subjectId: UUID): List<TeacherResponse> {
+        return repository.getBySubject(subjectId).map {
+            TeacherResponse.fromDomain(it)
+        }
+    }
 }
