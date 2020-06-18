@@ -16,6 +16,7 @@ class FacultyEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<Facul
     companion object : UUIDEntityClass<FacultyEntity>(Faculties)
 
     var title by Faculties.title
+    val groups by GroupEntity referrersOn Groups.faculty
 
     override fun toDomain(): Faculty = Faculty(id.value, title)
 }

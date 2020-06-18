@@ -11,7 +11,7 @@ import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class GroupRepositoryImpl: IGroupRepository {
+class GroupRepositoryImpl : IGroupRepository {
     override suspend fun getAll(): List<Group> = dbQuery {
         GroupEntity.all().map { it.toDomain() }
     }
@@ -50,8 +50,16 @@ class GroupRepositoryImpl: IGroupRepository {
         }.toDomain()
     }
 
-    override suspend fun delete(id: UUID) {
+    override suspend fun delete(id: UUID) = dbQuery {
         val group = GroupEntity.findById(id) ?: throw NotFoundException()
         group.delete()
+    }
+
+    override suspend fun getByFaculty(facultyId: UUID): List<Group> = dbQuery {
+        val faculty = FacultyEntity.findById(facultyId) ?: throw NotFoundException()
+
+        faculty.groups.map {
+            it.toDomain()
+        }
     }
 }
