@@ -18,7 +18,13 @@ fun Route.group() {
 
     route("group") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            val facultyParam = call.request.queryParameters["faculty"]
+
+            if (facultyParam != null) {
+                call.respond(DataResponse(ResponseInfo.OK, service.getByFaculty(facultyParam.toUUID())))
+            } else {
+                call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            }
         }
 
         post {
