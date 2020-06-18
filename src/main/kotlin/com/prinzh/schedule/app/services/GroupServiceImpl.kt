@@ -3,6 +3,7 @@ package com.prinzh.schedule.app.services
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.requests.GroupRequest
 import com.prinzh.schedule.app.responses.FullGroupResponse
+import com.prinzh.schedule.app.responses.ShortGroupResponse
 import com.prinzh.schedule.app.services.interfaces.IGroupService
 import com.prinzh.schedule.domain.entity.NewGroup
 import com.prinzh.schedule.domain.repository.IGroupRepository
@@ -62,4 +63,9 @@ class GroupServiceImpl(
         groupRepository.delete(id)
     }
 
+    override suspend fun getByFaculty(facultyId: UUID): List<ShortGroupResponse> {
+        return groupRepository.getByFaculty(facultyId).map {
+            ShortGroupResponse.fromDomain(it)
+        }
+    }
 }
