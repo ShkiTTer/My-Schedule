@@ -18,7 +18,13 @@ fun Route.faculty() {
 
     route("faculty") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            val searchParam = call.request.queryParameters["search"]
+
+            if (searchParam != null) {
+                call.respond(DataResponse(ResponseInfo.OK, service.search(searchParam)))
+            } else {
+                call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            }
         }
 
         post {
