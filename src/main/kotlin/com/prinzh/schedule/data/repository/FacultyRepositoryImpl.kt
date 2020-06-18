@@ -1,6 +1,8 @@
 package com.prinzh.schedule.data.repository
 
+import com.prinzh.schedule.app.common.extension.toRegexStringQuery
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
+import com.prinzh.schedule.data.db.entity.Faculties
 import com.prinzh.schedule.data.db.entity.FacultyEntity
 import com.prinzh.schedule.domain.entity.Faculty
 import com.prinzh.schedule.domain.entity.NewFaculty
@@ -36,5 +38,13 @@ class FacultyRepositoryImpl : IFacultyRepository {
     override suspend fun delete(id: UUID) = dbQuery {
         val faculty = FacultyEntity.findById(id) ?: throw NotFoundException()
         faculty.delete()
+    }
+
+    override suspend fun getByTitle(query: String): List<Faculty> = dbQuery {
+        FacultyEntity.find {
+            Faculties.title eq query.toRegexStringQuery()
+        }.map {
+            it.toDomain()
+        }
     }
 }

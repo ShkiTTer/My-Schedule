@@ -5,4 +5,5 @@ import com.prinzh.schedule.domain.entity.NewFaculty
 import java.util.*
 
 interface IFacultyRepository : ICrudRepository<NewFaculty, Faculty, UUID> {
+    suspend fun getByTitle(query: String): List<Faculty>
 }
