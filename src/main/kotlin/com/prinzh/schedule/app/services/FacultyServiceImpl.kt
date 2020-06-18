@@ -43,4 +43,12 @@ class FacultyServiceImpl(private val repository: IFacultyRepository) : IFacultyS
     override suspend fun delete(id: UUID) {
         repository.delete(id)
     }
+
+    override suspend fun search(query: String?): List<FacultyResponse> {
+        if (query.isNullOrEmpty()) throw BadRequestException("Invalid credentials")
+
+        return repository.getByTitle(query).map {
+            FacultyResponse.fromDomain(it)
+        }
+    }
 }
