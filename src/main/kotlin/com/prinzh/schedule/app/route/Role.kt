@@ -15,7 +15,7 @@ import org.koin.ktor.ext.inject
 fun Route.role() {
     val service by inject<IRoleService>()
 
-    route("role") {
+    route("roles") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }

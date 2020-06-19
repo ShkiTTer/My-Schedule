@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.user() {
     val service by inject<IUserService>()
 
-    route("user") {
+    route("users") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }

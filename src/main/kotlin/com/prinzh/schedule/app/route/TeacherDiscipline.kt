@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.teacherDiscipline() {
     val service: ITeacherDisciplineService by inject()
 
-    route("discipline") {
+    route("disciplines") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }

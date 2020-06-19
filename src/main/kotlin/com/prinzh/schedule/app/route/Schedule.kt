@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.schedule() {
     val service by inject<IScheduleService>()
 
-    route("schedule") {
+    route("schedules") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }

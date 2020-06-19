@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.teacher() {
     val service: ITeacherService by inject()
 
-    route("teacher") {
+    route("teachers") {
         get {
             val subjectParam = call.request.queryParameters["subject"]
             val searchParam = call.request.queryParameters["search"]

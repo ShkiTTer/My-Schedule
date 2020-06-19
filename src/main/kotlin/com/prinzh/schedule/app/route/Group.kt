@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.group() {
     val service: IGroupService by inject()
 
-    route("group") {
+    route("groups") {
         get {
             val facultyParam = call.request.queryParameters["faculty"]
 

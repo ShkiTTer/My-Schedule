@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.building() {
     val service: IBuildingService by inject()
 
-    route("building") {
+    route("buildings") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }

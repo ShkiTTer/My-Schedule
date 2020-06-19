@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.lessonType() {
     val service: ILessonTypeService by inject()
 
-    route("lesson_type") {
+    route("lesson_types") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }

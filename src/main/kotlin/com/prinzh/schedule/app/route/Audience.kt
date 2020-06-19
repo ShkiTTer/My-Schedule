@@ -16,7 +16,7 @@ import org.koin.ktor.ext.inject
 fun Route.audience() {
     val service: IAudienceService by inject()
 
-    route("audience") {
+    route("audiences") {
         get {
             call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
         }
