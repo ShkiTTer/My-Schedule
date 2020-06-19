@@ -68,4 +68,17 @@ class ScheduleRepositoryImpl : IScheduleRepository {
         val schedule = ScheduleEntity.findById(id) ?: throw NotFoundException()
         schedule.delete()
     }
+
+    override suspend fun getByTeacher(teacherId: UUID, week: Int): List<Schedule> = dbQuery {
+        val disciplines = TeacherDisciplineEntity.find {
+            TeacherDisciplines.teacher eq teacherId
+        }.map { it.id }
+
+        ScheduleEntity.find {
+            (Schedules.discipline inList disciplines) and
+                    ((Schedules.weekStart lessEq week) and (Schedules.weekEnd greaterEq week))
+        }.map {
+            it.toDomain()
+        }
+    }
 }
