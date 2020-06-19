@@ -3,7 +3,6 @@ package com.prinzh.schedule.app.services
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.requests.ScheduleRequest
 import com.prinzh.schedule.app.responses.ScheduleResponse
-import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.responses.common.IResponseContent
 import com.prinzh.schedule.app.services.interfaces.IScheduleService
 import com.prinzh.schedule.domain.entity.NewSchedule
@@ -14,7 +13,7 @@ import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository): IScheduleService {
+class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository) : IScheduleService {
     override suspend fun getAll(): List<IResponseContent> {
         return scheduleRepository.getAll().map { ScheduleResponse.fromDomain(it) }
     }
@@ -50,7 +49,8 @@ class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository): 
         if (data.day == null || data.lessonNumber == null || data.weekStart == null || data.weekEnd == null)
             throw BadRequestException("Invalid credentials")
 
-        return scheduleRepository.update(id,
+        return scheduleRepository.update(
+            id,
             NewSchedule(
                 groupId = data.group.toUUID(),
                 teacherId = data.teacher.toUUID(),
@@ -69,5 +69,11 @@ class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository): 
 
     override suspend fun delete(id: UUID) {
         scheduleRepository.delete(id)
+    }
+
+    override suspend fun getByTeacher(teacherId: UUID, week: Int): List<IResponseContent> {
+        return scheduleRepository.getByTeacher(teacherId, week).map {
+            ScheduleResponse.fromDomain(it)
+        }
     }
 }
