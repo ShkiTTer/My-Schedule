@@ -31,7 +31,7 @@ object JWTUtil {
         .withClaim("role", user.role.id.toString())
         .sign(algorithm)
 
-    private fun generateRefreshToken(accessToken: String): String {
+    private fun generateRefreshToken(): String {
         val bytes = ByteArray(REFRESH_LENGTH)
         random.nextBytes(bytes)
 
@@ -43,7 +43,7 @@ object JWTUtil {
         val expiredRefresh = getExpired(REFRESH_VALIDITY_IN_MS)
 
         val accessToken = generateAccessToken(user, expiredAccess)
-        val refreshToken = generateRefreshToken(accessToken)
+        val refreshToken = generateRefreshToken()
 
         return TokenInfo(
             accessToken = accessToken,
