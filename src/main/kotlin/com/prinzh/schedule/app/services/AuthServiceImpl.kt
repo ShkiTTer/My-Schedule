@@ -44,7 +44,7 @@ class AuthServiceImpl(
     }
 
     override suspend fun updateToken(userId: UUID, data: TokenRequest): IResponseContent {
-        if (data.accessToken.isNullOrEmpty() || data.refreshToken.isNullOrEmpty())
+        if (data.refreshToken.isNullOrEmpty())
             throw BadRequestException("Invalid credentials")
 
         val user = userRepository.getById(userId) ?: throw NotFoundException()
