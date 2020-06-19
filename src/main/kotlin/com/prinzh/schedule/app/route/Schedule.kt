@@ -6,6 +6,7 @@ import com.prinzh.schedule.app.responses.common.DataResponse
 import com.prinzh.schedule.app.responses.common.ResponseInfo
 import com.prinzh.schedule.app.services.interfaces.IScheduleService
 import io.ktor.application.call
+import io.ktor.features.BadRequestException
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
@@ -18,7 +19,24 @@ fun Route.schedule() {
 
     route("schedules") {
         get {
-            call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            val teacherParam = call.request.queryParameters["teacher"]
+            val weekParam = call.request.queryParameters["week"]
+
+            if (weekParam != null) {
+                teacherParam ?: throw BadRequestException("Invalid credentials")
+
+                call.respond(
+                    DataResponse(
+                        ResponseInfo.OK,
+                        service.getByTeacher(
+                            teacherParam.toUUID(),
+                            weekParam.toIntOrNull() ?: throw BadRequestException("Invalid credentials")
+                        )
+                    )
+                )
+            } else {
+                call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
+            }
         }
 
         post {
