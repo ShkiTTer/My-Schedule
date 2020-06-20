@@ -125,7 +125,10 @@ suspend fun main(args: Array<String>) {
 
         install(StatusPages) {
             exception<BadRequestException> {
-                call.respond(EmptyResponse(ResponseInfo.BAD_REQUEST))
+                val info = ResponseInfo.BAD_REQUEST.apply {
+                    message = it.message
+                }
+                call.respond(EmptyResponse(info))
             }
 
             exception<NotFoundException> {

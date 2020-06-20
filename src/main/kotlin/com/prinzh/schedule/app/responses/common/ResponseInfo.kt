@@ -6,7 +6,8 @@ import java.util.*
 data class ResponseInfo(
     val status: String,
     val statusCode: Int,
-    val timestamp: Long = Date().time
+    val timestamp: Long = Date().time,
+    var message: String? = null
 ) {
     companion object {
         val OK = ResponseInfo(

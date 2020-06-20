@@ -3,6 +3,7 @@ package com.prinzh.schedule.app.common.extension
 import com.prinzh.schedule.domain.entity.UserRole
 import io.ktor.features.BadRequestException
 import io.ktor.util.KtorExperimentalAPI
+import org.apache.commons.validator.routines.EmailValidator
 import java.util.*
 
 @KtorExperimentalAPI
@@ -32,5 +33,6 @@ fun String.toColor(): String {
     return color
 }
 
-@KtorExperimentalAPI
 fun String.toRegexStringQuery(): String = "%${this.toLowerCase()}%"
+
+fun String.isMail(): Boolean = EmailValidator.getInstance().isValid(this)

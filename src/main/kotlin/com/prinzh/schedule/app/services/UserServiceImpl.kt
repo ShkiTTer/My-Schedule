@@ -1,5 +1,6 @@
 package com.prinzh.schedule.app.services
 
+import com.prinzh.schedule.app.common.extension.isMail
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.common.util.HashUtil
 import com.prinzh.schedule.app.requests.UserRequest
@@ -7,7 +8,6 @@ import com.prinzh.schedule.app.responses.UserResponse
 import com.prinzh.schedule.app.services.interfaces.IUserService
 import com.prinzh.schedule.domain.entity.NewUser
 import com.prinzh.schedule.domain.entity.User
-import com.prinzh.schedule.domain.repository.IRefreshTokenRepository
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
@@ -39,6 +39,15 @@ class UserServiceImpl(
             throw BadRequestException("Invalid credentials")
         }
 
+        if (!data.mail.isMail()) throw BadRequestException("Invalid E-mail")
+        if (data.password.length < 8) throw BadRequestException("Password must be longer than 8 characters")
+
+        val userByLogin = userRepository.getByLogin(data.login)
+        val userByMail = userRepository.getByMail(data.mail)
+
+        if (userByLogin != null) throw BadRequestException("User with that login already exists")
+        if (userByMail != null) throw BadRequestException("User with that E-mail already exists")
+
         val salt = HashUtil.generateSalt()
 
         return userRepository.create(
@@ -60,6 +69,15 @@ class UserServiceImpl(
         ) {
             throw BadRequestException("Invalid credentials")
         }
+
+        if (!data.mail.isMail()) throw BadRequestException("Invalid E-mail")
+        if (data.password.length < 8) throw BadRequestException("Password must be longer than 8 characters")
+
+        val userByLogin = userRepository.getByLogin(data.login)
+        val userByMail = userRepository.getByMail(data.mail)
+
+        if (userByLogin != null) throw BadRequestException("User with that login already exists")
+        if (userByMail != null) throw BadRequestException("User with that E-mail already exists")
 
         val salt = HashUtil.generateSalt()
 
