@@ -52,8 +52,7 @@ val serviceModule = module {
 
     single<IUserService> {
         UserServiceImpl(
-            userRepository = get(),
-            refreshTokenRepository = get()
+            userRepository = get()
         )
     }
 

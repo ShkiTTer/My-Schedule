@@ -1,19 +1,18 @@
 package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
-import com.prinzh.schedule.data.db.entity.*
+import com.prinzh.schedule.data.db.entity.RoleEntity
+import com.prinzh.schedule.data.db.entity.UserEntity
+import com.prinzh.schedule.data.db.entity.Users
 import com.prinzh.schedule.domain.entity.NewUser
 import com.prinzh.schedule.domain.entity.User
 import com.prinzh.schedule.domain.repository.IUserRepository
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
 import java.util.*
 
 @KtorExperimentalAPI
-class UserRepositoryImpl: IUserRepository {
+class UserRepositoryImpl : IUserRepository {
     override suspend fun getAll(): List<User> = dbQuery {
         UserEntity.all().map { it.toDomain() }
     }
@@ -55,6 +54,12 @@ class UserRepositoryImpl: IUserRepository {
     override suspend fun getByLogin(login: String): User? = dbQuery {
         UserEntity.find {
             Users.login eq login
+        }.singleOrNull()?.toDomain()
+    }
+
+    override suspend fun getByMail(mail: String): User? = dbQuery {
+        UserEntity.find {
+            Users.mail eq mail
         }.singleOrNull()?.toDomain()
     }
 }

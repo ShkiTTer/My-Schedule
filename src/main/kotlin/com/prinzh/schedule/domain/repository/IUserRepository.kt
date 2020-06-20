@@ -6,4 +6,5 @@ import java.util.*
 
 interface IUserRepository : ICrudRepository<NewUser, User, UUID> {
     suspend fun getByLogin(login: String): User?
+    suspend fun getByMail(mail: String): User?
 }

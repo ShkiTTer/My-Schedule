@@ -1,18 +1,10 @@
 package com.prinzh.schedule.app.services
 
-import com.prinzh.schedule.app.common.exception.UnauthorizedException
 import com.prinzh.schedule.app.common.extension.toUUID
 import com.prinzh.schedule.app.common.util.HashUtil
-import com.prinzh.schedule.app.common.util.JWTUtil
-import com.prinzh.schedule.app.requests.LoginRequest
-import com.prinzh.schedule.app.requests.TokenRequest
 import com.prinzh.schedule.app.requests.UserRequest
-import com.prinzh.schedule.app.responses.LoginResponse
-import com.prinzh.schedule.app.responses.TokenResponse
 import com.prinzh.schedule.app.responses.UserResponse
-import com.prinzh.schedule.app.responses.common.IResponseContent
 import com.prinzh.schedule.app.services.interfaces.IUserService
-import com.prinzh.schedule.domain.entity.NewRefreshToken
 import com.prinzh.schedule.domain.entity.NewUser
 import com.prinzh.schedule.domain.entity.User
 import com.prinzh.schedule.domain.repository.IRefreshTokenRepository
@@ -21,12 +13,10 @@ import io.ktor.features.BadRequestException
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
 import java.util.*
-import java.util.logging.Logger
 
 @KtorExperimentalAPI
 class UserServiceImpl(
-    private val userRepository: IUserRepository,
-    private val refreshTokenRepository: IRefreshTokenRepository
+    private val userRepository: IUserRepository
 ) :
     IUserService {
 
@@ -73,7 +63,8 @@ class UserServiceImpl(
 
         val salt = HashUtil.generateSalt()
 
-        return userRepository.update(id,
+        return userRepository.update(
+            id,
             NewUser(
                 login = data.login,
                 password = HashUtil.hash(data.password, salt),
