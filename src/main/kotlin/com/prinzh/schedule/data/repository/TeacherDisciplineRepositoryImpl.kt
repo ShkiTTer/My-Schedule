@@ -1,7 +1,10 @@
 package com.prinzh.schedule.data.repository
 
 import com.prinzh.schedule.data.db.common.DatabaseFactory.dbQuery
-import com.prinzh.schedule.data.db.entity.*
+import com.prinzh.schedule.data.db.entity.SubjectEntity
+import com.prinzh.schedule.data.db.entity.TeacherDisciplineEntity
+import com.prinzh.schedule.data.db.entity.TeacherDisciplines
+import com.prinzh.schedule.data.db.entity.TeacherEntity
 import com.prinzh.schedule.domain.entity.NewTeacherDiscipline
 import com.prinzh.schedule.domain.entity.TeacherDiscipline
 import com.prinzh.schedule.domain.repository.ITeacherDisciplineRepository
@@ -10,7 +13,7 @@ import io.ktor.util.KtorExperimentalAPI
 import java.util.*
 
 @KtorExperimentalAPI
-class TeacherDisciplineRepositoryImpl: ITeacherDisciplineRepository {
+class TeacherDisciplineRepositoryImpl : ITeacherDisciplineRepository {
     override suspend fun getAll(): List<TeacherDiscipline> = dbQuery {
         TeacherDisciplineEntity.all().map { it.toDomain() }
     }
@@ -44,5 +47,11 @@ class TeacherDisciplineRepositoryImpl: ITeacherDisciplineRepository {
     override suspend fun delete(id: UUID) = dbQuery {
         val discipline = TeacherDisciplineEntity.findById(id) ?: throw NotFoundException()
         discipline.delete()
+    }
+
+    override suspend fun getByTeacher(teacherId: UUID): List<TeacherDiscipline> = dbQuery {
+        TeacherDisciplineEntity.find {
+            TeacherDisciplines.teacher eq teacherId
+        }.map { it.toDomain() }
     }
 }

@@ -32,25 +32,18 @@ fun Route.teacherDiscipline() {
             )
         }
 
-        route("{id}") {
-            get {
-                val id = call.parameters["id"]
+        put {
+            val data = call.receive<TeacherDisciplineRequest>()
 
-                call.respond(DataResponse(ResponseInfo.OK, service.getById(id.toUUID())))
-            }
-
-            put {
-                val id = call.parameters["id"]
-                val data = call.receive<TeacherDisciplineRequest>()
-
-                call.respond(
-                    DataResponse(
-                        ResponseInfo.OK,
-                        service.update(id.toUUID(), data)
-                    )
+            call.respond(
+                DataResponse(
+                    ResponseInfo.OK,
+                    service.update(data)
                 )
-            }
+            )
+        }
 
+        route("{id}") {
             delete {
                 val id = call.parameters["id"]
 

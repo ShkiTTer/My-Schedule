@@ -25,36 +25,66 @@ class TeacherDisciplineServiceImpl(
         }
     }
 
-    override suspend fun getById(id: UUID): TeacherDisciplineResponse {
-        return teacherDisciplineRepository.getById(id)?.let {
-            TeacherDisciplineResponse.fromDomain(it)
-        } ?: throw NotFoundException()
+    override suspend fun create(data: TeacherDisciplineRequest): List<TeacherDisciplineResponse> {
+        val subjectIds = data.subjects?.map {
+            it.toUUID()
+        } ?: throw BadRequestException("Invalid credentials")
+
+        val existDisciplines = teacherDisciplineRepository.getByTeacher(data.teacher.toUUID())
+
+        if (existDisciplines.isNotEmpty()) {
+            throw BadRequestException("Invalid credentials")
+        }
+
+        return subjectIds.map {
+            teacherDisciplineRepository.create(
+                NewTeacherDiscipline(
+                    data.teacher.toUUID(),
+                    it
+                )
+            )
+        }.map { TeacherDisciplineResponse.fromDomain(it) }
     }
 
-    override suspend fun create(data: TeacherDisciplineRequest): TeacherDisciplineResponse {
-        return teacherDisciplineRepository.create(
-            NewTeacherDiscipline(
-                teacherId = data.teacher.toUUID(),
-                subjectId = data.subject.toUUID()
+    override suspend fun update(data: TeacherDisciplineRequest): List<TeacherDisciplineResponse> {
+        val subjectIds = data.subjects?.map {
+            it.toUUID()
+        } ?: throw BadRequestException("Invalid credentials")
+
+        val existDisciplines = teacherDisciplineRepository.getByTeacher(data.teacher.toUUID())
+
+        if (existDisciplines.isEmpty()) {
+            throw BadRequestException("Invalid credentials")
+        }
+
+        val toDelete =
+            (existDisciplines.map { it.subject.id } - subjectIds).map { s ->
+                existDisciplines.find {
+                    it.subject.id == s
+                }?.id ?: throw BadRequestException("Invalid credentials")
+            }
+        val toAdd = subjectIds - existDisciplines.map { it.subject.id }
+
+        toAdd.forEach {
+            teacherDisciplineRepository.create(
+                NewTeacherDiscipline(data.teacher.toUUID(), it)
             )
-        ).let {
+        }
+
+        toDelete.forEach {
+            teacherDisciplineRepository.delete(it)
+        }
+
+        return teacherDisciplineRepository.getByTeacher(data.teacher.toUUID()).map {
             TeacherDisciplineResponse.fromDomain(it)
         }
     }
 
-    override suspend fun update(id: UUID, data: TeacherDisciplineRequest): TeacherDisciplineResponse {
-        return teacherDisciplineRepository.update(
-            id,
-            NewTeacherDiscipline(
-                teacherId = data.teacher.toUUID(),
-                subjectId = data.subject.toUUID()
-            )
-        ).let {
-            TeacherDisciplineResponse.fromDomain(it)
-        }
-    }
+    override suspend fun delete(teacherId: UUID) {
+        val ids = teacherDisciplineRepository.getByTeacher(teacherId).map { it.id }
 
-    override suspend fun delete(id: UUID) {
-        teacherDisciplineRepository.delete(id)
+        ids.forEach {
+            teacherDisciplineRepository.delete(it)
+        }
     }
 }
