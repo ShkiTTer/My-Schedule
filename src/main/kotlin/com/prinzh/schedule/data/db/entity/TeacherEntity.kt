@@ -1,6 +1,7 @@
 package com.prinzh.schedule.data.db.entity
 
 import com.prinzh.schedule.data.converter.IEntityConverter
+import com.prinzh.schedule.domain.entity.Subject
 import com.prinzh.schedule.domain.entity.Teacher
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -22,11 +23,19 @@ class TeacherEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<Teach
     var patronymic by Teachers.patronymic
     val subjects by SubjectEntity via TeacherDisciplines
 
-    override fun toDomain(): Teacher = Teacher(
+    override fun toDomain() = Teacher(
         id.value,
         surname,
         name,
         patronymic,
-        subjects.map { it.toDomain() }
+        subjects.map { it.toDomainWithoutTeachers() }
+    )
+
+    fun toDomainWithoutSubjects() = Teacher(
+        id.value,
+        surname,
+        name,
+        patronymic,
+        emptyList()
     )
 }

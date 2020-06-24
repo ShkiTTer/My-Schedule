@@ -25,7 +25,7 @@ fun String.toColor(): String {
     val color = this.replaceFirst("#", "")
 
     try {
-        color.toInt(16)
+        color.toLong(16)
     } catch (t: Throwable) {
         throw BadRequestException("Invalid credentials")
     }

@@ -18,9 +18,15 @@ class SubjectEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<Subje
     var title by Subjects.title
     val teachers by TeacherEntity via TeacherDisciplines
 
-    override fun toDomain(): Subject = Subject(
+    override fun toDomain() = Subject(
         id.value,
         title,
-        teachers.map { it.toDomain() }
+        teachers.map { it.toDomainWithoutSubjects() }
+    )
+
+    fun toDomainWithoutTeachers() = Subject(
+        id.value,
+        title,
+        emptyList()
     )
 }

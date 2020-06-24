@@ -9,20 +9,20 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import java.util.*
 
-object TeacherDisciplines: UUIDTable("teacher_discipline") {
+object TeacherDisciplines : UUIDTable("teacher_discipline") {
     val teacher = reference("teacher", Teachers, ReferenceOption.CASCADE)
     val subject = reference("subject", Subjects, ReferenceOption.CASCADE)
 }
 
-class TeacherDisciplineEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<TeacherDiscipline> {
-    companion object: UUIDEntityClass<TeacherDisciplineEntity>(TeacherDisciplines)
+class TeacherDisciplineEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<TeacherDiscipline> {
+    companion object : UUIDEntityClass<TeacherDisciplineEntity>(TeacherDisciplines)
 
     var teacher by TeacherEntity referencedOn TeacherDisciplines.teacher
     var subject by SubjectEntity referencedOn TeacherDisciplines.subject
 
     override fun toDomain(): TeacherDiscipline = TeacherDiscipline(
         id = id.value,
-        teacher = teacher.toDomain(),
-        subject = subject.toDomain()
+        teacher = teacher.toDomainWithoutSubjects(),
+        subject = subject.toDomainWithoutTeachers()
     )
 }
