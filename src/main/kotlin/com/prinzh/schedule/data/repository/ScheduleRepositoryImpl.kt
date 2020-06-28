@@ -81,4 +81,25 @@ class ScheduleRepositoryImpl : IScheduleRepository {
             it.toDomain()
         }
     }
+
+    override suspend fun getByGroup(groupId: UUID, week: Int): List<Schedule> = dbQuery {
+        val currentGroup = GroupEntity.findById(groupId) ?: throw NotFoundException()
+
+        val groups = GroupEntity.find {
+            Groups.parentGroup eq currentGroup.id
+        }.map { it.id }.toMutableList()
+        groups.add(currentGroup.id)
+
+        var parentGroup = currentGroup.parentGroup
+
+        while (parentGroup != null) {
+            groups.add(parentGroup.id)
+            parentGroup = parentGroup.parentGroup
+        }
+
+        ScheduleEntity.find {
+            ((Schedules.weekStart lessEq week) and (Schedules.weekEnd greaterEq week)) and
+                    (Schedules.group inList groups)
+        }.map { it.toDomain() }
+    }
 }

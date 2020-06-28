@@ -6,4 +6,5 @@ import java.util.*
 
 interface IScheduleRepository : ICrudRepository<NewSchedule, Schedule, UUID> {
     suspend fun getByTeacher(teacherId: UUID, week: Int): List<Schedule>
+    suspend fun getByGroup(groupId: UUID, week: Int): List<Schedule>
 }
