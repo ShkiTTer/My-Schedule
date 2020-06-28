@@ -20,20 +20,35 @@ fun Route.schedule() {
     route("schedules") {
         get {
             val teacherParam = call.request.queryParameters["teacher"]
+            val groupParam = call.request.queryParameters["group"]
             val weekParam = call.request.queryParameters["week"]
 
             if (weekParam != null) {
-                teacherParam ?: throw BadRequestException("Invalid credentials")
-
-                call.respond(
-                    DataResponse(
-                        ResponseInfo.OK,
-                        service.getByTeacher(
-                            teacherParam.toUUID(),
-                            weekParam.toIntOrNull() ?: throw BadRequestException("Invalid credentials")
+                when {
+                    !teacherParam.isNullOrEmpty() -> {
+                        call.respond(
+                            DataResponse(
+                                ResponseInfo.OK,
+                                service.getByTeacher(
+                                    teacherParam.toUUID(),
+                                    weekParam.toIntOrNull() ?: throw BadRequestException("Invalid credentials")
+                                )
+                            )
                         )
-                    )
-                )
+                    }
+                    !groupParam.isNullOrEmpty() -> {
+                        call.respond(
+                            DataResponse(
+                                ResponseInfo.OK,
+                                service.getByGroup(
+                                    groupParam.toUUID(),
+                                    weekParam.toIntOrNull() ?: throw BadRequestException("Invalid credentials")
+                                )
+                            )
+                        )
+                    }
+                    else -> throw BadRequestException("Invalid credentials")
+                }
             } else {
                 call.respond(DataResponse(ResponseInfo.OK, service.getAll()))
             }

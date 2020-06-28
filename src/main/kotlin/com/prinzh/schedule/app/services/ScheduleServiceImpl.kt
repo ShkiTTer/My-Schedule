@@ -76,4 +76,10 @@ class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository) :
             ScheduleResponse.fromDomain(it)
         }
     }
+
+    override suspend fun getByGroup(groupId: UUID, week: Int): List<IResponseContent> {
+        return scheduleRepository.getByGroup(groupId, week).map {
+            ScheduleResponse.fromDomain(it)
+        }
+    }
 }

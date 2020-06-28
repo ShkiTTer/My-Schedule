@@ -6,4 +6,5 @@ import java.util.*
 
 interface IScheduleService : ICrudService<ScheduleRequest, UUID> {
     suspend fun getByTeacher(teacherId: UUID, week: Int): List<IResponseContent>
+    suspend fun getByGroup(groupId: UUID, week: Int): List<IResponseContent>
 }
