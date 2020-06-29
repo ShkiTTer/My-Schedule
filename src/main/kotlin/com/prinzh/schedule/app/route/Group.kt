@@ -39,6 +39,14 @@ fun Route.group() {
         }
 
         route("{id}") {
+            route("parents") {
+                get {
+                    val id = call.parameters["id"]
+
+                    call.respond(DataResponse(ResponseInfo.OK, service.getParents(id.toUUID())))
+                }
+            }
+
             get {
                 val id = call.parameters["id"]
 

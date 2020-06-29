@@ -68,4 +68,13 @@ class GroupServiceImpl(
             ShortGroupResponse.fromDomain(it)
         }
     }
+
+    override suspend fun getParents(groupId: UUID): List<ShortGroupResponse> {
+        val group = groupRepository.getById(groupId) ?: throw NotFoundException()
+        val groups = groupRepository.getAll()
+
+        return (groups - group.childGroups).map {
+            ShortGroupResponse.fromDomain(it)
+        }
+    }
 }

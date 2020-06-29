@@ -9,18 +9,25 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import java.util.*
 
-object Groups: UUIDTable("group") {
+object Groups : UUIDTable("group") {
     val title = varchar("title", 50)
     val faculty = reference("faculty", Faculties, ReferenceOption.CASCADE)
     val parentGroup = reference("parent_group", Groups, ReferenceOption.SET_NULL).nullable()
 }
 
-class GroupEntity(id: EntityID<UUID>): UUIDEntity(id), IEntityConverter<Group> {
-    companion object: UUIDEntityClass<GroupEntity>(Groups)
+class GroupEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<Group> {
+    companion object : UUIDEntityClass<GroupEntity>(Groups)
 
     var title by Groups.title
     var faculty by FacultyEntity referencedOn Groups.faculty
     var parentGroup by GroupEntity optionalReferencedOn Groups.parentGroup
+    val childGroups by GroupEntity optionalReferrersOn Groups.parentGroup
 
-    override fun toDomain(): Group = Group(id.value, title, faculty.toDomain(), parentGroup?.toDomain())
+    override fun toDomain(): Group = Group(
+        id.value,
+        title,
+        faculty.toDomain(),
+        parentGroup?.toDomain(),
+        childGroups.map { it.toDomain() }
+    )
 }

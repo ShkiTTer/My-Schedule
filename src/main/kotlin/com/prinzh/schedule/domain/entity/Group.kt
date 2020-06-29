@@ -7,5 +7,6 @@ data class Group(
     val id: UUID,
     val title: String,
     val faculty: Faculty,
-    val parentGroup: Group? = null
+    val parentGroup: Group? = null,
+    val childGroups: List<Group>
 ): IDataEntity
