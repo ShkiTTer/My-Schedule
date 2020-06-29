@@ -73,7 +73,7 @@ class GroupServiceImpl(
         val group = groupRepository.getById(groupId) ?: throw NotFoundException()
         val groups = groupRepository.getAll()
 
-        return (groups - group.childGroups).map {
+        return (groups - group.childGroups - group).map {
             ShortGroupResponse.fromDomain(it)
         }
     }

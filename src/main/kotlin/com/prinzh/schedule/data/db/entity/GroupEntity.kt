@@ -28,6 +28,14 @@ class GroupEntity(id: EntityID<UUID>) : UUIDEntity(id), IEntityConverter<Group> 
         title,
         faculty.toDomain(),
         parentGroup?.toDomain(),
-        childGroups.map { it.toDomain() }
+        childGroups.map { it.toDomainWithoutChild() }
+    )
+
+    fun toDomainWithoutChild(): Group = Group(
+        id.value,
+        title,
+        faculty.toDomain(),
+        parentGroup?.toDomainWithoutChild(),
+        listOf()
     )
 }
