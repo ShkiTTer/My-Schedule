@@ -20,6 +20,10 @@ class UserServiceImpl(
 ) :
     IUserService {
 
+    companion object {
+        private const val MIN_PASSORD_LENGTH = 8
+    }
+
     override suspend fun getAll(): List<UserResponse> {
         return userRepository.getAll().map {
             UserResponse.fromDomain(it)
@@ -40,7 +44,8 @@ class UserServiceImpl(
         }
 
         if (!data.mail.isMail()) throw BadRequestException("Invalid E-mail")
-        if (data.password.length < 8) throw BadRequestException("Password must be longer than 8 characters")
+        if (data.password.length < MIN_PASSORD_LENGTH)
+            throw BadRequestException("Password must be longer than 8 characters")
 
         val userByLogin = userRepository.getByLogin(data.login)
         val userByMail = userRepository.getByMail(data.mail)
@@ -71,13 +76,17 @@ class UserServiceImpl(
         }
 
         if (!data.mail.isMail()) throw BadRequestException("Invalid E-mail")
-        if (data.password.length < 8) throw BadRequestException("Password must be longer than 8 characters")
+        if (data.password.length < MIN_PASSORD_LENGTH)
+            throw BadRequestException("Password must be longer than 8 characters")
 
         val userByLogin = userRepository.getByLogin(data.login)
         val userByMail = userRepository.getByMail(data.mail)
 
-        if (userByLogin != null) throw BadRequestException("User with that login already exists")
-        if (userByMail != null) throw BadRequestException("User with that E-mail already exists")
+        if (userByLogin != null && userByLogin.login != data.login)
+            throw BadRequestException("User with that login already exists")
+
+        if (userByMail != null && userByMail.mail != data.mail)
+            throw BadRequestException("User with that E-mail already exists")
 
         val salt = HashUtil.generateSalt()
 

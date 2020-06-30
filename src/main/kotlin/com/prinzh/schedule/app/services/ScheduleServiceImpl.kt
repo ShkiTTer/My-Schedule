@@ -14,6 +14,13 @@ import java.util.*
 
 @KtorExperimentalAPI
 class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository) : IScheduleService {
+    companion object {
+        private const val MAX_DAY = 6
+        private const val MIN_DAY = 1
+        private const val MAX_LESSON_NUMBER = 7
+        private const val MIN_LESSON_NUMBER = 1
+    }
+
     override suspend fun getAll(): List<IResponseContent> {
         return scheduleRepository.getAll().map { ScheduleResponse.fromDomain(it) }
     }
@@ -26,6 +33,15 @@ class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository) :
 
     override suspend fun create(data: ScheduleRequest): IResponseContent {
         if (data.day == null || data.lessonNumber == null || data.weekStart == null || data.weekEnd == null)
+            throw BadRequestException("Invalid credentials")
+
+        if (data.weekEnd < data.weekStart)
+            throw BadRequestException("Invalid credentials")
+
+        if (data.day < MIN_DAY || data.day > MAX_DAY)
+            throw BadRequestException("Invalid credentials")
+
+        if (data.lessonNumber < MIN_LESSON_NUMBER || data.lessonNumber > MAX_LESSON_NUMBER)
             throw BadRequestException("Invalid credentials")
 
         return scheduleRepository.create(
@@ -47,6 +63,15 @@ class ScheduleServiceImpl(private val scheduleRepository: IScheduleRepository) :
 
     override suspend fun update(id: UUID, data: ScheduleRequest): IResponseContent {
         if (data.day == null || data.lessonNumber == null || data.weekStart == null || data.weekEnd == null)
+            throw BadRequestException("Invalid credentials")
+
+        if (data.weekEnd < data.weekStart)
+            throw BadRequestException("Invalid credentials")
+
+        if (data.day < MIN_DAY || data.day > MAX_DAY)
+            throw BadRequestException("Invalid credentials")
+
+        if (data.lessonNumber < MIN_LESSON_NUMBER || data.lessonNumber > MAX_LESSON_NUMBER)
             throw BadRequestException("Invalid credentials")
 
         return scheduleRepository.update(
